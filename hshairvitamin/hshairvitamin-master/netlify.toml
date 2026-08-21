@@ -1,0 +1,9 @@
+[build]
+  base = "hs-hair-site"
+  command = "npm run build"
+  publish = "hs-hair-site/dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

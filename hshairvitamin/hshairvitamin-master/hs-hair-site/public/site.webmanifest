@@ -1,0 +1,16 @@
+{
+  "name": "HS HAIR Vitamin",
+  "short_name": "HS HAIR",
+  "description": "Landing premium HS HAIR com atendimento no WhatsApp.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff9fc",
+  "theme_color": "#d61675",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

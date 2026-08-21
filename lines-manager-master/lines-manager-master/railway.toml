@@ -1,0 +1,27 @@
+# Railway.app deployment configuration
+# Line Manager - Gerenciador de Linhas
+
+[build]
+  builder = "nixpacks"
+  buildCommand = "npm ci --include=dev && npm run build"
+
+[deploy]
+  startCommand = "npm start"
+  restartPolicyType = "on_failure"
+  restartPolicyMaxRetries = 10
+
+# Health check endpoint
+[healthcheck]
+  path = "/api/test"
+  intervalSeconds = 30
+  timeoutSeconds = 10
+
+# Environment variables (Railway injects automatically)
+[env]
+  NODE_ENV = "production"
+  
+# Railway will auto-inject:
+# - DATABASE_URL (PostgreSQL connection)
+# - PORT (application port)
+# - RAILWAY_STATIC_URL (public URL)
+# - JWT_SECRET (configure manually in Railway dashboard)

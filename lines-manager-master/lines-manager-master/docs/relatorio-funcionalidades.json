@@ -1,0 +1,56 @@
+{
+  "project": "Line Manager",
+  "analysisDate": "2026-05-31",
+  "frontend": {
+    "routes": [
+      {"path": "/login", "module": "Autenticacao", "status": "ok", "file": "client/src/pages/login.tsx"},
+      {"path": "/dashboard", "module": "Indicadores", "status": "ok", "file": "client/src/pages/dashboard.tsx"},
+      {"path": "/lines", "module": "Catalogo de linhas", "status": "ok", "file": "client/src/pages/lines.tsx"},
+      {"path": "/admin", "module": "Usuarios e administracao", "status": "ok", "file": "client/src/pages/admin.tsx"},
+      {"path": "/excel-analyzer", "module": "Importacao e validacao Excel", "status": "ok", "file": "client/src/pages/excel-analyzer.tsx"}
+    ],
+    "mainButtons": [
+      {"name": "Nova Linha", "area": "Linhas", "reason": "Cadastrar nova linha", "status": "ok"},
+      {"name": "Importar linhas", "area": "Excel Analyzer", "reason": "Carga em lote", "status": "ok"},
+      {"name": "Baixar Template", "area": "Excel Analyzer", "reason": "Padronizar importacao", "status": "ok"},
+      {"name": "Criar Usuario", "area": "Admin", "reason": "Governanca de acesso", "status": "ok"},
+      {"name": "Exportar Backup", "area": "Admin", "reason": "Continuidade de operacao", "status": "ok"}
+    ]
+  },
+  "backend": {
+    "auth": {
+      "jwt": true,
+      "roles": ["viewer", "user", "admin", "super_admin"],
+      "status": "ok"
+    },
+    "apiCount": 28,
+    "criticalEndpoints": [
+      "/api/auth/login",
+      "/api/users",
+      "/api/lines",
+      "/api/lines/bulk-import",
+      "/api/dashboard/stats",
+      "/api/admin/execute-sql"
+    ]
+  },
+  "database": {
+    "provider": "PostgreSQL",
+    "orm": "Drizzle",
+    "coreTables": ["users", "lines", "activity_logs", "organizations", "subscriptions", "usage_metrics", "user_invitations"],
+    "status": "ok"
+  },
+  "security": {
+    "hardcodedAdminRemoved": true,
+    "fallbackUsesEnv": true,
+    "rawSqlBlockedByDefault": true,
+    "notes": [
+      "Manter ENABLE_PRODUCTION_FALLBACK_LOGIN=false por padrao",
+      "Definir JWT_SECRET forte no Railway",
+      "Definir ADMIN_EMAIL e ADMIN_NAME explicitamente"
+    ]
+  },
+  "branding": {
+    "stnReferencesInActiveSource": 0,
+    "targetName": "Line Manager"
+  }
+}

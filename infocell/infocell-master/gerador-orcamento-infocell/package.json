@@ -1,0 +1,19 @@
+{
+  "name": "gerador-orcamento-its-comports",
+  "version": "1.0.0",
+  "description": "Gerador de orcamentos profissional da ITS COMPORTS. Interface web responsiva e CLI Node.js para geracao de DOCX e PDF.",
+  "main": "gerar-orcamento-cli.js",
+  "scripts": {
+    "start": "npx serve . -p 3030 --no-clipboard",
+    "gerar": "node gerar-orcamento-cli.js",
+    "gerar:hb": "node generate-orcamento-hb.js"
+  },
+  "keywords": ["orcamento", "pdf", "docx", "its-comports"],
+  "author": "Ismael Tomas Silva Aquino <ismaelthoma0016@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "docx": "^9.7.1",
+    "inquirer": "^14.0.2",
+    "pdfkit": "^0.19.0"
+  }
+}

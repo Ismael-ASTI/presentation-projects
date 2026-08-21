@@ -1,0 +1,5 @@
+node_modules/
+*.docx
+*.pdf
+!orcamento-hb-medicinal-oficial.docx
+!orcamento-hb-medicinal-oficial.pdf

@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de Orçamentos — Leo Celulares</title>
+  <link rel="icon" href="media/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    /* ============ RESET & BASE ============ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; scroll-behavior: smooth; }
+    body { font-family: 'Sora', sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+    /* ============ LAYOUT ============ */
+    .app { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+    .topbar {
+      background: #161b27;
+      border-bottom: 1px solid #1e2535;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand img { width: 36px; height: 36px; object-fit: contain; border-radius: 6px; }
+    .brand-name { font-weight: 700; font-size: 1rem; color: #fff; letter-spacing: -0.3px; }
+    .brand-sub { font-size: 0.75rem; color: #667eea; font-weight: 500; }
+    .topbar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .workspace { display: grid; grid-template-columns: 480px 1fr; height: calc(100vh - 66px); overflow: hidden; }
+    @media (max-width: 1100px) {
+      .workspace { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; }
+      .app { height: auto; }
+    }
+
+    /* ============ FORM PANEL ============ */
+    .form-panel {
+      overflow-y: auto; overflow-x: hidden;
+      background: #161b27;
+      border-right: 1px solid #1e2535;
+      padding: 0 0 40px 0;
+    }
+
+    .panel-section {
+      padding: 20px 24px;
+      border-bottom: 1px solid #1e2535;
+    }
+    .panel-section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .section-header i { color: #667eea; font-size: 0.95rem; }
+    .section-header h3 { font-size: 0.9rem; font-weight: 600; color: #cbd5e0; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .form-grid { display: grid; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.8rem; font-weight: 600; color: #94a3b8; }
+    input, textarea, select {
+      background: #0f1117;
+      border: 1.5px solid #1e2535;
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #e2e8f0;
+      font-family: 'Sora', sans-serif;
+      font-size: 0.88rem;
+      width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+    }
+    textarea { resize: vertical; min-height: 72px; }
+    select option { background: #0f1117; }
+
+    /* ============ SERVIÇOS ============ */
+    .items-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+
+    .service-item {
+      background: #0f1117;
+      border: 1.5px solid #1e2535;
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+    }
+    .service-item-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .service-item-num {
+      font-size: 0.75rem; font-weight: 600; color: #667eea;
+      background: rgba(102,126,234,0.12);
+      padding: 2px 8px; border-radius: 4px;
+    }
+    .btn-remove-item {
+      background: none; border: none; cursor: pointer;
+      color: #fc8181; font-size: 0.85rem; padding: 4px;
+      border-radius: 4px; transition: background 0.2s;
+    }
+    .btn-remove-item:hover { background: rgba(252,129,129,0.1); }
+
+    .service-item .form-row { grid-template-columns: 1fr 80px 110px; }
+    @media (max-width: 480px) { .service-item .form-row { grid-template-columns: 1fr; } }
+
+    .subtotal-line {
+      text-align: right;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 8px;
+    }
+    .subtotal-line strong { color: #667eea; }
+
+    /* ============ CORTESIA ============ */
+    .courtesy-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .courtesy-item {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .courtesy-item input { flex: 1; }
+    .btn-remove-courtesy {
+      background: none; border: none; cursor: pointer;
+      color: #fc8181; font-size: 0.8rem; flex-shrink: 0;
+    }
+
+    /* ============ TOTAIS ============ */
+    .totals-box {
+      background: #0f1117;
+      border: 1.5px solid #1e2535;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .totals-row {
+      display: flex; justify-content: space-between;
+      padding: 6px 0;
+      font-size: 0.88rem;
+      color: #94a3b8;
+    }
+    .totals-row.total-final {
+      border-top: 1px solid #1e2535;
+      margin-top: 8px; padding-top: 14px;
+      font-weight: 700; font-size: 1.1rem;
+      color: #667eea;
+    }
+    .discount-row { color: #68d391; }
+
+    /* ============ BUTTONS ============ */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 18px; border-radius: 8px; border: none;
+      font-family: 'Sora', sans-serif; font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary { background: #667eea; color: #fff; }
+    .btn-primary:hover { background: #5568d3; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+    .btn-secondary { background: #2d3748; color: #e2e8f0; }
+    .btn-secondary:hover { background: #3a4a5c; }
+    .btn-success { background: #38a169; color: #fff; }
+    .btn-success:hover { background: #2f8a59; }
+    .btn-outline { background: transparent; border: 1.5px solid #667eea; color: #667eea; }
+    .btn-outline:hover { background: rgba(102,126,234,0.1); }
+    .btn-ghost { background: transparent; color: #94a3b8; }
+    .btn-ghost:hover { color: #e2e8f0; background: rgba(255,255,255,0.05); }
+    .btn-add {
+      width: 100%; background: rgba(102,126,234,0.08);
+      border: 1.5px dashed #2d3a55; color: #667eea;
+      border-radius: 8px; padding: 10px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      font-family: 'Sora', sans-serif; font-size: 0.85rem;
+    }
+    .btn-add:hover { background: rgba(102,126,234,0.15); border-color: #667eea; }
+
+    /* ============ PREVIEW PANEL ============ */
+    .preview-panel {
+      overflow-y: auto;
+      background: #f0f2f5;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Folha A4 no preview */
+    .sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 740px;
+      min-height: 1040px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabeçalho do documento */
+    .doc-header {
+      background: #1F3A56;
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .doc-header-logo img {
+      width: 70px; height: 70px; object-fit: contain;
+      border-radius: 8px; border: 2px solid rgba(255,255,255,0.2);
+    }
+    .doc-header-info { flex: 1; }
+    .doc-company-name { font-size: 1.35rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .doc-company-contact { font-size: 0.82rem; color: #b0c4de; }
+    .doc-header-badge {
+      text-align: right;
+      font-size: 0.75rem;
+      color: #b0c4de;
+      line-height: 1.6;
+    }
+
+    /* Corpo do documento */
+    .doc-body { padding: 30px 36px; flex: 1; }
+
+    .doc-title-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 20px; padding-bottom: 14px;
+      border-bottom: 2px solid #e8ecf2;
+    }
+    .doc-title { font-size: 1.15rem; font-weight: 700; color: #1F3A56; text-transform: uppercase; letter-spacing: 0.5px; }
+    .doc-proposal-num { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
+
+    /* Bloco de cliente */
+    .doc-client-box {
+      background: #f7f9fc;
+      border-left: 4px solid #1F3A56;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-client-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #94a3b8; font-weight: 600; margin-bottom: 6px; }
+    .doc-client-name { font-size: 1rem; font-weight: 700; color: #1F3A56; }
+    .doc-client-details { font-size: 0.82rem; color: #64748b; margin-top: 3px; }
+
+    /* Section titulo */
+    .doc-section-title {
+      font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.6px; color: #1F3A56;
+      font-weight: 700; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .doc-section-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: #e8ecf2;
+    }
+
+    /* Tabela de serviços */
+    .doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .doc-table,
+    .doc-table thead,
+    .doc-table tbody,
+    .doc-table tr,
+    .doc-table th,
+    .doc-table td {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-table th {
+      background: #1F3A56; color: #fff;
+      font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.4px; padding: 9px 12px;
+      text-align: left;
+    }
+    .doc-table th:last-child, .doc-table td:last-child { text-align: right; }
+    .doc-table td {
+      padding: 10px 12px; font-size: 0.85rem; color: #334155;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .doc-table tr:last-child td { border-bottom: none; }
+    .doc-table tr:nth-child(even) td { background: #f9fafc; }
+
+    /* Totais no documento */
+    .doc-totals { margin-bottom: 22px; }
+    .doc-totals-row {
+      display: flex; justify-content: flex-end; gap: 30px;
+      font-size: 0.85rem; padding: 5px 0;
+      color: #64748b;
+    }
+    .doc-totals-row strong { min-width: 100px; text-align: right; color: #334155; }
+    .doc-total-final {
+      background: #1F3A56; color: #fff;
+      border-radius: 8px; padding: 14px 18px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 22px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-total-label { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px; opacity: 0.85; }
+    .doc-total-value { font-size: 1.5rem; font-weight: 700; }
+
+    /* Pagamento */
+    .doc-payment-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-bottom: 22px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-payment-option {
+      border: 1.5px solid #e8ecf2;
+      border-radius: 8px; padding: 12px;
+      text-align: center;
+    }
+    .doc-payment-option.highlight { border-color: #667eea; background: #f0f3ff; }
+    .doc-payment-option .pay-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
+    .doc-payment-option .pay-value { font-size: 0.95rem; font-weight: 700; color: #1F3A56; }
+    .doc-payment-option .pay-desc { font-size: 0.72rem; color: #64748b; margin-top: 3px; }
+
+    /* Listas escopo/inclusos/cortesia */
+    .doc-list { list-style: none; padding: 0; margin-bottom: 18px; }
+    .doc-list,
+    .doc-list li,
+    .doc-section-title,
+    .doc-obs-box,
+    .doc-validity,
+    .doc-footer {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-list li {
+      font-size: 0.84rem; color: #475569;
+      padding: 5px 0 5px 18px;
+      position: relative;
+      border-bottom: 1px dashed #f0f2f5;
+    }
+    .doc-list li:last-child { border-bottom: none; }
+    .doc-list li::before { content: '▸'; position: absolute; left: 0; color: #667eea; }
+    .doc-list.courtesy li::before { content: '★'; color: #e53e3e; }
+
+    /* Observações */
+    .doc-obs-box {
+      background: #fffbeb; border: 1px solid #f6e05e;
+      border-radius: 6px; padding: 12px 14px;
+      font-size: 0.82rem; color: #744210;
+      margin-bottom: 20px;
+      white-space: pre-line;
+      display: none;
+    }
+    .doc-obs-box.visible { display: block; }
+
+    /* Validade */
+    .doc-validity {
+      font-size: 0.78rem; color: #94a3b8;
+      text-align: center; margin-bottom: 20px;
+    }
+
+    /* Rodapé doc */
+    .doc-footer {
+      background: #f7f9fc; border-top: 1px solid #e8ecf2;
+      padding: 18px 36px; display: flex;
+      justify-content: space-between; align-items: center;
+      margin-top: auto;
+    }
+    .doc-signature { text-align: center; }
+    .doc-sig-line { border-top: 1px solid #cbd5e0; width: 180px; margin-bottom: 6px; }
+    .doc-sig-label { font-size: 0.75rem; color: #94a3b8; }
+    .doc-footer-brand { font-size: 0.78rem; color: #94a3b8; text-align: right; }
+
+    /* ============ TOAST ============ */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #2d3748; color: #e2e8f0;
+      padding: 12px 18px; border-radius: 8px;
+      font-size: 0.88rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success i { color: #68d391; }
+    .toast.error i { color: #fc8181; }
+
+    /* ============ PRINT ============ */
+    @page {
+      size: A4;
+      margin: 10mm;
+    }
+
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        color: #000000;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .app,
+      .workspace,
+      .preview-panel,
+      .sheet {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      .topbar,
+      .form-panel,
+      .toast {
+        display: none !important;
+      }
+
+      .preview-panel {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+
+      .sheet {
+        width: auto !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        page-break-after: auto;
+      }
+
+      .doc-header,
+      .doc-client-box,
+      .doc-total-final,
+      .doc-payment-grid,
+      .doc-footer,
+      .doc-section-title,
+      .doc-list,
+      .doc-list li,
+      .doc-obs-box,
+      .doc-validity {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+
+    /* ============ SCROLLBAR ============ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f1117; }
+    ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
+
+    /* ============ MISC ============ */
+    .separator { height: 1px; background: #1e2535; margin: 0; }
+    .badge-cortesia {
+      display: inline-block; background: rgba(229,62,62,0.1);
+      color: #fc8181; border-radius: 4px;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 1px 6px; vertical-align: middle; margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ======== TOPBAR ======== -->
+  <header class="topbar">
+    <a class="brand" href="#">
+      <img src="media/logo.svg" alt="Leo Celulares" onerror="this.src=''" />
+      <div>
+        <div class="brand-name">Leo Celulares</div>
+        <div class="brand-sub">Gerador de Orçamentos</div>
+      </div>
+    </a>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" onclick="limparTudo()" title="Limpar formulário">
+        <i class="fas fa-redo-alt"></i> Limpar
+      </button>
+      <button class="btn btn-outline" onclick="salvarRascunho()" title="Salvar rascunho no navegador">
+        <i class="fas fa-save"></i> <span class="hide-xs">Salvar</span>
+      </button>
+      <button class="btn btn-secondary" onclick="window.print()" title="Imprimir">
+        <i class="fas fa-print"></i> <span class="hide-xs">Imprimir</span>
+      </button>
+      <button class="btn btn-primary" onclick="gerarPDF()" title="Baixar PDF">
+        <i class="fas fa-download"></i> <span>Download PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ======== WORKSPACE ======== -->
+  <div class="workspace">
+
+    <!-- ====== FORM PANEL ====== -->
+    <aside class="form-panel" id="formPanel">
+
+      <!-- Minha empresa -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-building"></i>
+          <h3>Minha Empresa</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nome da empresa</label>
+              <input id="myCompany" value="Leo Celulares" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>WhatsApp</label>
+              <input id="myPhone" value="+55 62 98609-8281" oninput="render()" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input id="myEmail" value="contato@leocelulares.com.br" oninput="render()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Dados do orçamento -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-file-alt"></i>
+          <h3>Dados do Orçamento</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Número da proposta</label>
+              <input id="proposalNum" value="ORC-2026-0610-01" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>Validade (dias)</label>
+              <input id="validity" type="number" value="7" min="1" oninput="render()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cliente -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-user-tie"></i>
+          <h3>Dados do Cliente</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nome / Empresa do cliente</label>
+            <input id="clientName" placeholder="Ex: Maria Santos" value="" oninput="render()" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Telefone</label>
+              <input id="clientPhone" placeholder="(62) 99999-9999" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>E-mail</label>
+              <input id="clientEmail" placeholder="cliente@email.com" oninput="render()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Serviços -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-tools"></i>
+          <h3>Serviços / Itens</h3>
+        </div>
+        <div id="serviceItems" class="items-list"></div>
+        <button class="btn-add" onclick="addServiceItem()">
+          <i class="fas fa-plus"></i> Adicionar item
+        </button>
+      </div>
+
+      <!-- Desconto -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-tag"></i>
+          <h3>Desconto (opcional)</h3>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="discountType" onchange="render()">
+              <option value="none">Sem desconto</option>
+              <option value="percent">Percentual (%)</option>
+              <option value="fixed">Valor fixo (R$)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor</label>
+            <input id="discountValue" type="number" min="0" step="0.01" placeholder="0" oninput="render()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Formas de pagamento -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-money-bill-wave"></i>
+          <h3>Formas de Pagamento</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Condição 1 (label)</label>
+              <input id="pay1label" value="Pagamento único" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>Valor Pix / À vista</label>
+              <input id="pay1value" value="550,00" placeholder="Auto" oninput="render()" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Condição 2 (label)</label>
+              <input id="pay2label" value="WhatsApp" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>Descrição</label>
+              <input id="pay2desc" value="+55 62 98609-8281" placeholder="Ex: 50% entrada + 50% conclusão" oninput="render()" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Condição 3 (label)</label>
+              <input id="pay3label" value="Pix especial" oninput="render()" />
+            </div>
+            <div class="form-group">
+              <label>Valor Pix (R$)</label>
+              <input id="pay3value" placeholder="Ex: 550,00" oninput="render()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cortesias -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-gift"></i>
+          <h3>Cortesias <span class="badge-cortesia">Grátis</span></h3>
+        </div>
+        <div id="courtesyItems" class="courtesy-list"></div>
+        <button class="btn-add" onclick="addCourtesy()">
+          <i class="fas fa-plus"></i> Adicionar cortesia
+        </button>
+      </div>
+
+      <!-- Observações -->
+      <div class="panel-section">
+        <div class="section-header">
+          <i class="fas fa-comment-dots"></i>
+          <h3>Observações</h3>
+        </div>
+        <div class="form-group">
+          <textarea id="observations" placeholder="Termos adicionais, condições especiais, avisos..." rows="4" oninput="render()"></textarea>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ====== PREVIEW PANEL ====== -->
+    <main class="preview-panel">
+      <div class="sheet" id="docSheet">
+
+        <!-- Cabeçalho do documento -->
+        <div class="doc-header">
+          <div class="doc-header-logo">
+            <img src="media/logo.svg" alt="Logo" onerror="this.style.display='none'" />
+          </div>
+          <div class="doc-header-info">
+            <div class="doc-company-name" id="pCompany">ITS COMPORTS</div>
+            <div class="doc-company-contact" id="pContact">(62) 99627-0693 | ismaelthoma0016@gmail.com</div>
+          </div>
+          <div class="doc-header-badge">
+            <div><strong style="color:#fff;">ORÇAMENTO</strong></div>
+            <div id="pProposalNum">ORC-2026-0610-01</div>
+            <div id="pDate"></div>
+          </div>
+        </div>
+
+        <!-- Corpo -->
+        <div class="doc-body">
+
+          <div class="doc-title-row">
+            <div class="doc-title">Proposta de Serviço Técnico</div>
+            <div class="doc-proposal-num" id="pProposalNum2">ORC-2026-0610-01</div>
+          </div>
+
+          <div class="doc-client-box">
+            <div class="doc-client-label">Para</div>
+            <div class="doc-client-name" id="pClientName">—</div>
+            <div class="doc-client-details" id="pClientDetails"></div>
+          </div>
+
+          <!-- Serviços -->
+          <div class="doc-section-title">Serviços e Itens</div>
+          <table class="doc-table" id="pServicesTable">
+            <thead>
+              <tr>
+                <th style="width:50%">Descrição</th>
+                <th style="width:12%;text-align:center">Qtd</th>
+                <th style="width:18%;text-align:right">Unit.</th>
+                <th style="width:20%;text-align:right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="pServicesBody"></tbody>
+          </table>
+
+          <!-- Totais -->
+          <div class="doc-totals" id="pTotals"></div>
+
+          <!-- Bloco valor total -->
+          <div class="doc-total-final">
+            <div>
+              <div class="doc-total-label">VALOR TOTAL DO SERVIÇO</div>
+              <div style="font-size:0.75rem;opacity:0.7;" id="pValidityNote"></div>
+            </div>
+            <div class="doc-total-value" id="pTotalValue">R$ 0,00</div>
+          </div>
+
+          <!-- Pagamento -->
+          <div class="doc-section-title">Formas de Pagamento</div>
+          <div class="doc-payment-grid" id="pPaymentGrid"></div>
+
+          <!-- Cortesias -->
+          <div id="courtesySection" style="display:none">
+            <div class="doc-section-title">Cortesias Inclusas <span class="badge-cortesia">Grátis</span></div>
+            <ul class="doc-list courtesy" id="pCourtesyList"></ul>
+          </div>
+
+          <!-- Observações -->
+          <div class="doc-obs-box" id="pObservations"></div>
+
+          <div class="doc-validity" id="pValidity"></div>
+
+        </div>
+
+        <!-- Rodapé doc -->
+        <div class="doc-footer">
+          <div></div>
+          <div class="doc-signature">
+            <div class="doc-sig-line"></div>
+            <div class="doc-sig-label" id="pSigLabel">ITS COMPORTS</div>
+          </div>
+          <div class="doc-footer-brand" id="pFooterBrand">
+            Emitido por ITS COMPORTS<br/>
+            <span id="pFooterContact"></span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+<!-- html2pdf -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+// ============================================================
+// ESTADO
+// ============================================================
+let services = [];
+let courtesies = [];
+
+// ============================================================
+// INICIALIZAÇÃO
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  carregarRascunho();
+  if (services.length === 0) {
+    addServiceItem('Assistencia tecnica em smartphones, troca de tela, bateria e venda de acessorios', 1, '');
+  }
+  if (courtesies.length === 0) {
+    addCourtesy('Limpeza tecnica preventiva e pelicula simples de cortesia, quando aplicavel, sem custo adicional.');
+  }
+  render();
+  document.getElementById('pDate').textContent = new Date().toLocaleDateString('pt-BR');
+});
+
+// ============================================================
+// SERVIÇOS
+// ============================================================
+function addServiceItem(desc = '', qty = 1, unit = '') {
+  const id = Date.now() + Math.random();
+  services.push({ id, desc, qty, unit });
+  renderServiceItems();
+  render();
+}
+
+function removeServiceItem(id) {
+  services = services.filter(s => s.id !== id);
+  renderServiceItems();
+  render();
+}
+
+function renderServiceItems() {
+  const container = document.getElementById('serviceItems');
+  container.innerHTML = '';
+  services.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'service-item';
+    div.innerHTML = `
+      <div class="service-item-header">
+        <span class="service-item-num">Item ${index + 1}</span>
+        ${services.length > 1 ? `<button class="btn-remove-item" onclick="removeServiceItem(${item.id})" title="Remover"><i class="fas fa-times"></i></button>` : ''}
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>Descrição do serviço</label>
+        <textarea placeholder="Descreva o serviço..." rows="2"
+          oninput="updateService(${item.id},'desc',this.value)">${item.desc}</textarea>
+      </div>
+      <div class="form-row service-item .form-row">
+        <div class="form-group">
+          <label>Qtd</label>
+          <input type="number" value="${item.qty}" min="1" oninput="updateService(${item.id},'qty',this.value)" />
+        </div>
+        <div class="form-group">
+          <label>Valor unit (R$)</label>
+          <input type="number" step="0.01" min="0" placeholder="0,00" value="${item.unit}"
+            oninput="updateService(${item.id},'unit',this.value)" />
+        </div>
+      </div>
+      <div class="subtotal-line" id="sub_${item.id}">Subtotal: <strong>R$ ${calcSubtotal(item)}</strong></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateService(id, field, value) {
+  const item = services.find(s => s.id === id);
+  if (!item) return;
+  item[field] = field === 'qty' ? parseInt(value) || 1 : value;
+  const el = document.getElementById('sub_' + id);
+  if (el) el.innerHTML = `Subtotal: <strong>R$ ${calcSubtotal(item)}</strong>`;
+  render();
+}
+
+function calcSubtotal(item) {
+  const unit = parseFloat(item.unit) || 0;
+  const qty = parseInt(item.qty) || 1;
+  return (unit * qty).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+}
+
+function calcTotal() {
+  return services.reduce((sum, s) => {
+    return sum + (parseFloat(s.unit) || 0) * (parseInt(s.qty) || 1);
+  }, 0);
+}
+
+function calcFinalTotal() {
+  const total = calcTotal();
+  const type = document.getElementById('discountType').value;
+  const dv = parseFloat(document.getElementById('discountValue').value) || 0;
+  if (type === 'percent') return total - (total * dv / 100);
+  if (type === 'fixed') return Math.max(0, total - dv);
+  return total;
+}
+
+// ============================================================
+// CORTESIAS
+// ============================================================
+function addCourtesy(text = '') {
+  const id = Date.now() + Math.random();
+  courtesies.push({ id, text });
+  renderCourtesyItems();
+  render();
+}
+
+function removeCourtesy(id) {
+  courtesies = courtesies.filter(c => c.id !== id);
+  renderCourtesyItems();
+  render();
+}
+
+function renderCourtesyItems() {
+  const container = document.getElementById('courtesyItems');
+  container.innerHTML = '';
+  courtesies.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'courtesy-item';
+    div.innerHTML = `
+      <input value="${item.text}" placeholder="Ex: Limpeza preventiva grátis"
+        oninput="updateCourtesy(${item.id}, this.value)" />
+      <button class="btn-remove-courtesy" onclick="removeCourtesy(${item.id})">
+        <i class="fas fa-times"></i>
+      </button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function updateCourtesy(id, value) {
+  const c = courtesies.find(c => c.id === id);
+  if (c) { c.text = value; render(); }
+}
+
+// ============================================================
+// RENDER PREVIEW
+// ============================================================
+function val(id) { return (document.getElementById(id) || {}).value || ''; }
+function txt(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+function render() {
+  const today = new Date().toLocaleDateString('pt-BR');
+
+  // Topbar doc
+  txt('pCompany', val('myCompany') || 'ITS COMPORTS');
+  document.getElementById('pContact').textContent =
+    [val('myPhone'), val('myEmail')].filter(Boolean).join(' | ');
+
+  // Proposta
+  const propNum = val('proposalNum');
+  txt('pProposalNum', propNum);
+  txt('pProposalNum2', propNum);
+  document.getElementById('pDate').textContent = today;
+
+  // Cliente
+  const cn = val('clientName');
+  txt('pClientName', cn || '—');
+  const clientDetails = [val('clientPhone'), val('clientEmail')].filter(Boolean).join(' | ');
+  document.getElementById('pClientDetails').textContent = clientDetails;
+  document.getElementById('pClientDetails').style.display = clientDetails ? 'block' : 'none';
+
+  // Serviços na tabela
+  const tbody = document.getElementById('pServicesBody');
+  tbody.innerHTML = '';
+  services.forEach(item => {
+    if (!item.desc && !item.unit) return;
+    const sub = (parseFloat(item.unit) || 0) * (parseInt(item.qty) || 1);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${item.desc || '—'}</td>
+      <td style="text-align:center">${item.qty}</td>
+      <td style="text-align:right">R$ ${(parseFloat(item.unit)||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+      <td style="text-align:right">R$ ${sub.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Totais
+  const subtotal = calcTotal();
+  const type = document.getElementById('discountType').value;
+  const dv = parseFloat(document.getElementById('discountValue').value) || 0;
+  const final = calcFinalTotal();
+
+  const totalsEl = document.getElementById('pTotals');
+  let totalsHTML = '';
+  if (type !== 'none' && dv > 0) {
+    const discLabel = type === 'percent' ? `Desconto (${dv}%)` : 'Desconto';
+    const discVal = type === 'percent' ? (subtotal * dv / 100) : dv;
+    totalsHTML += `<div class="doc-totals-row"><span>Subtotal</span><strong>R$ ${subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong></div>`;
+    totalsHTML += `<div class="doc-totals-row discount-row"><span>${discLabel}</span><strong>- R$ ${discVal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</strong></div>`;
+  }
+  totalsEl.innerHTML = totalsHTML;
+
+  txt('pTotalValue', 'R$ ' + final.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+
+  // Validade
+  const days = parseInt(val('validity')) || 7;
+  const validDate = new Date();
+  validDate.setDate(validDate.getDate() + days);
+  txt('pValidity', `Proposta válida por ${days} dias corridos (até ${validDate.toLocaleDateString('pt-BR')})`);
+  txt('pValidityNote', `Válido por ${days} dias`);
+
+  // Pagamento
+  const pay1v = val('pay1value') ? `R$ ${val('pay1value')}` : `R$ ${final.toLocaleString('pt-BR',{minimumFractionDigits:2})}`;
+  const payGrid = document.getElementById('pPaymentGrid');
+  payGrid.innerHTML = '';
+  const opts = [
+    { label: val('pay1label') || 'Pagamento único', value: pay1v, desc: 'Valor cheio', highlight: false },
+    { label: val('pay2label') || 'WhatsApp', value: '', desc: val('pay2desc') || '+55 62 98609-8281', highlight: true },
+    { label: val('pay3label') || 'Pix especial', value: val('pay3value') ? `R$ ${val('pay3value')}` : '', desc: 'Desconto especial', highlight: false },
+  ];
+  opts.forEach(o => {
+    if (!o.value && !o.desc) return;
+    const d = document.createElement('div');
+    d.className = 'doc-payment-option' + (o.highlight ? ' highlight' : '');
+    d.innerHTML = `<div class="pay-label">${o.label}</div>${o.value ? `<div class="pay-value">${o.value}</div>` : ''}<div class="pay-desc">${o.desc}</div>`;
+    payGrid.appendChild(d);
+  });
+
+  // Cortesias
+  const courtesySection = document.getElementById('courtesySection');
+  const filledCourtesies = courtesies.filter(c => c.text.trim());
+  if (filledCourtesies.length > 0) {
+    courtesySection.style.display = 'block';
+    document.getElementById('pCourtesyList').innerHTML =
+      filledCourtesies.map(c => `<li>${c.text}</li>`).join('');
+  } else {
+    courtesySection.style.display = 'none';
+  }
+
+  // Observações
+  const obs = val('observations');
+  const obsEl = document.getElementById('pObservations');
+  obsEl.textContent = obs;
+  obsEl.classList.toggle('visible', obs.trim().length > 0);
+
+  // Rodapé
+  txt('pSigLabel', val('myCompany') || 'ITS COMPORTS');
+  txt('pFooterBrand', `Emitido por ${val('myCompany') || 'ITS COMPORTS'}`);
+  txt('pFooterContact', val('myEmail') || '');
+}
+
+// ============================================================
+// PDF
+// ============================================================
+function gerarPDF() {
+  const client = val('clientName') || 'orcamento';
+  const filename = `orcamento-${client.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.pdf`;
+  const element = document.getElementById('docSheet');
+  const opt = {
+    margin: 0,
+    filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
+    pagebreak: {
+      mode: ['css', 'legacy'],
+      avoid: [
+        '.doc-client-box',
+        '.doc-section-title',
+        '.doc-table',
+        '.doc-total-final',
+        '.doc-payment-grid',
+        '.doc-list',
+        '.doc-obs-box',
+        '.doc-footer'
+      ]
+    }
+  };
+  html2pdf().set(opt).from(element).save();
+  showToast('PDF gerado com sucesso!', 'success');
+}
+
+// ============================================================
+// RASCUNHO (localStorage)
+// ============================================================
+function salvarRascunho() {
+  const ids = ['myCompany','myPhone','myEmail','proposalNum','validity','clientName','clientPhone','clientEmail','discountType','discountValue','pay1label','pay1value','pay2label','pay2desc','pay3label','pay3value','observations'];
+  const data = {};
+  ids.forEach(id => { data[id] = val(id); });
+  data.services = services;
+  data.courtesies = courtesies;
+  localStorage.setItem('orcamento_rascunho', JSON.stringify(data));
+  showToast('Rascunho salvo!', 'success');
+}
+
+function carregarRascunho() {
+  try {
+    const raw = localStorage.getItem('orcamento_rascunho');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    const ids = ['myCompany','myPhone','myEmail','proposalNum','validity','clientName','clientPhone','clientEmail','discountType','discountValue','pay1label','pay1value','pay2label','pay2desc','pay3label','pay3value','observations'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) el.value = data[id];
+    });
+    if (data.services && data.services.length > 0) {
+      services = data.services;
+      renderServiceItems();
+    }
+    if (data.courtesies && data.courtesies.length > 0) {
+      courtesies = data.courtesies;
+      renderCourtesyItems();
+    }
+  } catch (_) {}
+}
+
+function limparTudo() {
+  if (!confirm('Deseja limpar todos os campos?')) return;
+  localStorage.removeItem('orcamento_rascunho');
+  ['clientPhone','clientEmail','discountValue','pay3value','observations'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('clientName').value = '';
+  document.getElementById('myCompany').value = 'Leo Celulares';
+  document.getElementById('myPhone').value = '+55 62 98609-8281';
+  document.getElementById('myEmail').value = 'contato@leocelulares.com.br';
+  document.getElementById('pay1label').value = 'Pagamento unico';
+  document.getElementById('pay1value').value = '';
+  document.getElementById('pay2label').value = 'WhatsApp';
+  document.getElementById('pay2desc').value = '+55 62 98609-8281';
+  document.getElementById('proposalNum').value = 'ORC-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-01';
+  document.getElementById('discountType').value = 'none';
+  services = [];
+  courtesies = [];
+  addServiceItem('Assistencia tecnica em smartphones, troca de tela, bateria e venda de acessorios', 1, '');
+  addCourtesy('Limpeza tecnica preventiva e pelicula simples de cortesia, quando aplicavel, sem custo adicional.');
+  render();
+  showToast('Formulário limpo!', 'success');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

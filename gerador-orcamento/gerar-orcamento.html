@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Orçamento - ITS COMPORTS</title>
+    <link rel="icon" type="image/x-icon" href="media/ITS-FOTO-DE-PERFIL.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #1F3A56;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .preview-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .preview-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #1F3A56;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f9f9f9;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .preview,
+        .preview-header,
+        .preview-row,
+        .preview-section-title,
+        .preview-list,
+        .preview-list li,
+        .price-box {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .preview-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+        }
+
+        .preview-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .preview-company {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1F3A56;
+            margin-bottom: 5px;
+        }
+
+        .preview-contact {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .preview-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #333;
+            margin: 15px 0 10px 0;
+        }
+
+        .preview-row {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: #1F3A56;
+        }
+
+        .preview-value {
+            color: #333;
+            word-break: break-word;
+        }
+
+        .preview-section-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1F3A56;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 5px;
+        }
+
+        .preview-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .preview-list li {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .preview-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .price-box {
+            background: #E9F1F8;
+            border: 2px solid #9EB5CC;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .price-label {
+            font-size: 0.8rem;
+            color: #1F3A56;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .price-value {
+            font-size: 1.8rem;
+            color: #1F3A56;
+            font-weight: 700;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-download {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-print {
+            background: #764ba2;
+            color: white;
+        }
+
+        .btn-print:hover {
+            background: #643a88;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-clear {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #d0d0d0;
+        }
+
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .preview-section {
+                position: static;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-section, .preview-section {
+                padding: 20px;
+            }
+        }
+
+        .footer-note {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* Estilo para impressão */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .form-section, header, .button-group {
+                display: none;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-section {
+                box-shadow: none;
+                border: none;
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <i class="fas fa-file-invoice-dollar"></i>
+                Gerador de Orçamentos
+            </h1>
+            <p>ITS COMPORTS - Crie orçamentos profissionais em segundos</p>
+        </header>
+
+        <div class="content">
+            <!-- Formulário -->
+            <div class="form-section">
+                <h2>
+                    <i class="fas fa-pen-square"></i>
+                    Dados do Orçamento
+                </h2>
+
+                <div class="form-group">
+                    <label for="proposalNumber">Número da Proposta</label>
+                    <input type="text" id="proposalNumber" placeholder="ORC-2026-0610-01" value="ORC-2026-0610-01">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientName">Nome do Cliente</label>
+                    <input type="text" id="clientName" placeholder="Ex: HB Medicinal" value="Cliente X">
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceTitle">Título do Serviço</label>
+                    <input type="text" id="serviceTitle" placeholder="Ex: Reorganização de OneDrive" value="Serviço Técnico">
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceDescription">Descrição do Serviço</label>
+                    <textarea id="serviceDescription" placeholder="Descrição detalhada do que será feito...">Proposta comercial para execução de serviço técnico profissional.</textarea>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="value">Valor Fechado (R$)</label>
+                        <input type="text" id="value" placeholder="600,00" value="600,00">
+                    </div>
+                    <div class="form-group">
+                        <label for="pixValue">Valor Pix Especial (R$)</label>
+                        <input type="text" id="pixValue" placeholder="550,00" value="550,00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="scope">Escopo (um item por linha)</label>
+                    <textarea id="scope" placeholder="Levantamento do ambiente&#10;Execução do serviço&#10;Teste final">Levantamento do ambiente
+Execução do serviço
+Teste final</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="includes">Itens Inclusos (um item por linha)</label>
+                    <textarea id="includes" placeholder="Atendimento técnico presencial&#10;Orientação de uso">Atendimento técnico presencial
+Orientação de uso</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-download" onclick="downloadPDF()">
+                        <i class="fas fa-download"></i>
+                        Download PDF
+                    </button>
+                    <button class="btn-print" onclick="window.print()">
+                        <i class="fas fa-print"></i>
+                        Imprimir
+                    </button>
+                </div>
+                <button class="btn-clear" onclick="limparFormulario()" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-redo"></i>
+                    Limpar Tudo
+                </button>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-section">
+                <h2>
+                    <i class="fas fa-eye"></i>
+                    Pré-visualização
+                </h2>
+
+                <div id="previewContent" class="preview">
+                    <div class="preview-header">
+                        <div class="preview-logo">
+                            <img src="media/logo.jpg" alt="ITS COMPORTS" onerror="this.style.display='none'">
+                        </div>
+                        <div class="preview-company">ITS COMPORTS</div>
+                        <div class="preview-contact">
+                            <div>(62) 99627-0693 | ismaelthoma0016@gmail.com</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <strong style="font-size: 1.1rem;">ORÇAMENTO DE SERVIÇO TÉCNICO</strong>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                            Proposta <span id="previewProposal">ORC-2026-0610-01</span> | <span id="previewDate"></span>
+                        </div>
+                    </div>
+
+                    <div class="preview-row">
+                        <div class="preview-label">Cliente:</div>
+                        <div class="preview-value" id="previewClient">Cliente X</div>
+                    </div>
+
+                    <div class="preview-row">
+                        <div class="preview-label">Serviço:</div>
+                        <div class="preview-value" id="previewService">Serviço Técnico</div>
+                    </div>
+
+                    <div class="preview-section-title">Objeto da Proposta</div>
+                    <div class="preview-value" id="previewDescription" style="font-size: 0.9rem; line-height: 1.4;">
+                        Proposta comercial para execução de serviço técnico profissional.
+                    </div>
+
+                    <div class="preview-section-title">Escopo</div>
+                    <ul class="preview-list" id="previewScope">
+                        <li>Levantamento do ambiente</li>
+                        <li>Execução do serviço</li>
+                        <li>Teste final</li>
+                    </ul>
+
+                    <div class="preview-section-title">Itens Inclusos</div>
+                    <ul class="preview-list" id="previewIncludes">
+                        <li>Atendimento técnico presencial</li>
+                        <li>Orientação de uso</li>
+                    </ul>
+
+                    <div class="price-box">
+                        <div class="price-label">VALOR FECHADO DO SERVIÇO</div>
+                        <div class="price-value" id="previewPrice">R$ 600,00</div>
+                    </div>
+
+                    <div class="preview-section-title">Formas de Pagamento</div>
+                    <ul class="preview-list">
+                        <li id="previewPriceOption1">Pagamento único: R$ 600,00</li>
+                        <li id="previewPriceOption2">Condição especial no Pix: R$ 550,00</li>
+                    </ul>
+
+                    <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 0.85rem; color: #666;">
+                        Validade: 7 dias corridos
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas fa-shield-alt"></i>
+            Todos os dados são processados localmente no seu navegador. Nenhuma informação é enviada para servidores.
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> Orçamento gerado com sucesso!
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        // Atualizar preview em tempo real
+        function atualizarPreview() {
+            document.getElementById('previewProposal').textContent = document.getElementById('proposalNumber').value;
+            document.getElementById('previewClient').textContent = document.getElementById('clientName').value;
+            document.getElementById('previewService').textContent = document.getElementById('serviceTitle').value;
+            document.getElementById('previewDescription').textContent = document.getElementById('serviceDescription').value;
+            document.getElementById('previewPrice').textContent = 'R$ ' + document.getElementById('value').value;
+
+            // Escopo
+            const scopeItems = document.getElementById('scope').value.split('\n').filter(item => item.trim());
+            const scopeHtml = scopeItems.map(item => `<li>${item.trim()}</li>`).join('');
+            document.getElementById('previewScope').innerHTML = scopeHtml || '<li>Nenhum item</li>';
+
+            // Inclusos
+            const includesItems = document.getElementById('includes').value.split('\n').filter(item => item.trim());
+            const includesHtml = includesItems.map(item => `<li>${item.trim()}</li>`).join('');
+            document.getElementById('previewIncludes').innerHTML = includesHtml || '<li>Nenhum item</li>';
+
+            // Opções de preço
+            document.getElementById('previewPriceOption1').textContent = 'Pagamento único: R$ ' + document.getElementById('value').value;
+            document.getElementById('previewPriceOption2').textContent = 'Condição especial no Pix: R$ ' + document.getElementById('pixValue').value;
+
+            // Data
+            const today = new Date().toLocaleDateString('pt-BR');
+            document.getElementById('previewDate').textContent = today;
+        }
+
+        // Adicionar event listeners para atualizar preview
+        document.getElementById('proposalNumber').addEventListener('input', atualizarPreview);
+        document.getElementById('clientName').addEventListener('input', atualizarPreview);
+        document.getElementById('serviceTitle').addEventListener('input', atualizarPreview);
+        document.getElementById('serviceDescription').addEventListener('input', atualizarPreview);
+        document.getElementById('value').addEventListener('input', atualizarPreview);
+        document.getElementById('pixValue').addEventListener('input', atualizarPreview);
+        document.getElementById('scope').addEventListener('input', atualizarPreview);
+        document.getElementById('includes').addEventListener('input', atualizarPreview);
+
+        // Baixar como PDF
+        function downloadPDF() {
+            const element = document.getElementById('previewContent');
+            const opt = {
+                margin: 10,
+                filename: `orcamento-${document.getElementById('clientName').value.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
+                pagebreak: {
+                    mode: ['css', 'legacy'],
+                    avoid: ['.preview-header', '.preview-row', '.preview-section-title', '.preview-list', '.price-box']
+                }
+            };
+            html2pdf().set(opt).from(element).save();
+
+            mostrarMensagem();
+        }
+
+        // Limpar formulário
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                document.getElementById('proposalNumber').value = 'ORC-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-01';
+                document.getElementById('clientName').value = '';
+                document.getElementById('serviceTitle').value = '';
+                document.getElementById('serviceDescription').value = '';
+                document.getElementById('value').value = '';
+                document.getElementById('pixValue').value = '';
+                document.getElementById('scope').value = '';
+                document.getElementById('includes').value = '';
+                atualizarPreview();
+            }
+        }
+
+        // Mostrar mensagem de sucesso
+        function mostrarMensagem() {
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'flex';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Inicializar preview
+        atualizarPreview();
+    </script>
+</body>
+</html>
