@@ -365,6 +365,55 @@
         padding: 24px 26px 28px;
       }
 
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .project-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 178px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: rgba(22, 27, 34, 0.72);
+      }
+
+      .project-card h2 {
+        margin: 0;
+        color: var(--text);
+        font-size: 17px;
+      }
+
+      .project-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .project-links {
+        display: flex;
+        gap: 14px;
+        margin-top: auto;
+        flex-wrap: wrap;
+      }
+
+      .project-links a {
+        color: #58a6ff;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .project-links a:hover {
+        text-decoration: underline;
+      }
+
       h1 {
         margin: 0 0 18px;
         font-size: clamp(2.3rem, 3vw, 3.4rem);
@@ -483,6 +532,10 @@
           width: 100%;
           min-width: 0;
         }
+
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -564,6 +617,55 @@
             <div class="readme-content">
               <h1>presentation-projects</h1>
               <p class="description">Projetos para apresentação profissional</p>
+              <div class="projects-grid">
+                <article class="project-card">
+                  <h2>BertzTech</h2>
+                  <p>Landing page para assistência técnica e acessórios para celular.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/bertztech/bertztech-landing-main">Código</a>
+                    <a href="https://bertztechdigital.com.br">Site online</a>
+                  </div>
+                </article>
+                <article class="project-card">
+                  <h2>Gerador de Orçamentos</h2>
+                  <p>Automação de documentos com geração de orçamentos em PDF e DOCX.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/gerador-orcamento">Código</a>
+                    <a href="https://its-geradoros.netlify.app">Site online</a>
+                  </div>
+                </article>
+                <article class="project-card">
+                  <h2>HS Hair Vitamin</h2>
+                  <p>Landing page de produto construída com React, TypeScript e Vite.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/hshairvitamin/hshairvitamin-master/hs-hair-site">Código</a>
+                    <a href="https://hshairvitamin.netlify.app">Site online</a>
+                  </div>
+                </article>
+                <article class="project-card">
+                  <h2>Infocell</h2>
+                  <p>Site comercial desenvolvido com Next.js, React e TypeScript.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/infocell/infocell-master">Código</a>
+                    <a href="https://info-cell.social.br">Site online</a>
+                  </div>
+                </article>
+                <article class="project-card">
+                  <h2>Leo Celulares</h2>
+                  <p>Site institucional responsivo com HTML, CSS e JavaScript.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/leocelulares/leocelulares-main">Código</a>
+                    <a href="https://leocelulares.netlify.app">Site online</a>
+                  </div>
+                </article>
+                <article class="project-card">
+                  <h2>Lines Manager</h2>
+                  <p>Sistema full-stack com React, Express, PostgreSQL e Drizzle ORM.</p>
+                  <div class="project-links">
+                    <a href="https://github.com/Ismael-ASTI/presentation-projects/tree/main/lines-manager-master/lines-manager-master">Código</a>
+                  </div>
+                </article>
+              </div>
             </div>
           </section>
         </main>
