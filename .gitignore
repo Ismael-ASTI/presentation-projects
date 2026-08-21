@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.next/
+.netlify/
+coverage/
+*.local
+.env
+.env.*
+!.env.example
+*.log
+*.pdf
+*.docx
+.DS_Store
+.vscode/

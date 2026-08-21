@@ -1,0 +1,110 @@
+name: Migrate Railway Database
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  migrate:
+    name: Apply DB migrations (Drizzle) on Railway
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Ensure SSL for cloud Postgres
+      PGSSLMODE: require
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # Install devDependencies to include drizzle-kit
+        run: npm ci
+        env:
+          NODE_ENV: development
+
+      - name: Resolve DATABASE_URL secret
+        env:
+          RAILWAY_DATABASE_URL: ${{ secrets.RAILWAY_DATABASE_URL }}
+          DATABASE_PUBLIC_URL: ${{ secrets.DATABASE_PUBLIC_URL }}
+        run: |
+          if [ -n "$RAILWAY_DATABASE_URL" ]; then
+            echo "DATABASE_URL=$RAILWAY_DATABASE_URL" >> $GITHUB_ENV
+            echo "Using RAILWAY_DATABASE_URL"
+          elif [ -n "$DATABASE_PUBLIC_URL" ]; then
+            echo "DATABASE_URL=$DATABASE_PUBLIC_URL" >> $GITHUB_ENV
+            echo "Using DATABASE_PUBLIC_URL"
+          else
+            echo "No database secret provided. Please set RAILWAY_DATABASE_URL or DATABASE_PUBLIC_URL." >&2
+            exit 1
+          fi
+
+      - name: Drizzle migrate (run SQL migrations)
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: npm run db:migrate
+        continue-on-error: true
+
+      - name: Drizzle push (apply migrations)
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: npm run db:push
+        continue-on-error: true
+
+      # Ensure psql is available for verification step regardless of drizzle push result
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Ensure pgcrypto extension
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+
+      - name: Fallback SQL - ensure WhatsApp columns exist
+        if: failure()
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: |
+          echo "Applying WhatsApp columns fallback..."
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "ALTER TABLE lines ADD COLUMN IF NOT EXISTS has_whatsapp boolean DEFAULT true;"
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "ALTER TABLE lines ADD COLUMN IF NOT EXISTS whatsapp_number varchar(20);"
+
+      - name: Bootstrap schema if missing
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: |
+          echo "Checking if base tables exist..."
+          TABLE_EXISTS=$(psql "$DATABASE_URL" -tAc "SELECT to_regclass('public.lines') IS NOT NULL;")
+          if [ "$TABLE_EXISTS" != "t" ]; then
+            echo "Base table 'lines' not found. Applying initial SQL migrations..."
+            # Ensure extension for gen_random_uuid
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "CREATE EXTENSION IF NOT EXISTS pgcrypto;"
+            # Apply initial migration files
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f drizzle/0000_dazzling_hydra.sql
+            psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f drizzle/0001_shallow_hawkeye.sql || true
+          else
+            echo "Base tables already exist. Skipping bootstrap."
+          fi
+
+      - name: Verify columns
+        if: always()
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        run: |
+          echo "Verifying 'lines' table and WhatsApp columns..."
+          echo "-- Table existence --"
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "SELECT to_regclass('public.lines') AS lines_table;"
+          echo "-- Columns --"
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "SELECT column_name, data_type FROM information_schema.columns WHERE table_schema='public' AND table_name='lines' AND column_name IN ('has_whatsapp','whatsapp_number') ORDER BY column_name;"
+
+      - name: Done
+        run: echo "Migration workflow completed"

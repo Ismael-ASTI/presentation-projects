@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Leo Celulares — Assistência técnica especializada em smartphones, venda de aparelhos e acessórios em Goiânia. Buscamos e entregamos!" />
+  <title>Leo Celulares | Assistência Técnica Especializada</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2" />
+  <link rel="shortcut icon" type="image/svg+xml" href="favicon.svg?v=2" />
+  <link rel="apple-touch-icon" href="favicon.svg?v=2" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========== SCROLL PROGRESS ========== -->
+  <div class="scroll-progress-bar" id="scrollProgress"></div>
+
+  <!-- ========== HEADER / NAV ========== -->
+  <header class="header" id="header">
+    <div class="container nav-container">
+      <a href="#hero" class="logo">
+        <span class="logo-icon logo-icon-pair" aria-hidden="true">
+          <i class="fa-brands fa-apple"></i>
+          <i class="fa-brands fa-android"></i>
+        </span>
+        <span class="logo-text">Leo <strong>Celulares</strong></span>
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#servicos" class="nav-link">Serviços</a>
+        <a href="#diferenciais" class="nav-link">Diferenciais</a>
+        <a href="#sobre" class="nav-link">Sobre</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#contato" class="nav-link">Contato</a>
+        <a href="https://wa.me/5562986098281" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <canvas id="particles" class="particles-canvas"></canvas>
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+
+    <div class="container hero-container">
+      <div class="hero-badge">
+        <i class="fa-solid fa-shield-halved"></i> <span id="typeText"></span><span class="type-cursor">|</span>
+      </div>
+      <h1 class="hero-title">
+        Seu celular nas <span class="text-gradient">mãos certas</span>
+      </h1>
+      <p class="hero-subtitle">
+        Consertamos, vendemos e entregamos. Do iPhone ao Android,
+        a  Leo Celulares cuida do seu dispositivo com qualidade e agilidade.
+      </p>
+      <div class="hero-ctas">
+        <a href="https://wa.me/5562986098281?text=Ol%C3%A1%2C+gostaria+de+um+or%C3%A7amento!" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+          <i class="fa-brands fa-whatsapp"></i> Solicitar Orçamento
+        </a>
+        <a href="#servicos" class="btn btn-outline btn-lg">
+          Ver Serviços <i class="fa-solid fa-chevron-down"></i>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value counter" data-count="500">0</span>
+          <span class="stat-label">Clientes atendidos</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">Rápido</span>
+          <span class="stat-label">Diagnóstico na hora</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-value">Garantia</span>
+          <span class="stat-label">Em todos os serviços</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-devices">
+      <div class="device-card device-1">
+        <i class="fa-brands fa-apple"></i>
+      </div>
+      <div class="device-card device-2">
+        <i class="fa-brands fa-android"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MARCAS ========== -->
+  <section class="brands-section">
+    <div class="container">
+      <p class="brands-label">Trabalhamos com as principais marcas</p>
+    </div>
+    <div class="marquee-track-wrapper">
+      <div class="marquee-track">
+        <div class="brand-item"><i class="fa-brands fa-apple"></i> Apple</div>
+        <div class="brand-item"><i class="fa-solid fa-mobile-screen"></i> Samsung</div>
+        <div class="brand-item"><i class="fa-solid fa-mobile-screen-button"></i> Motorola</div>
+        <div class="brand-item"><i class="fa-brands fa-android"></i> Xiaomi</div>
+        <div class="brand-item"><i class="fa-solid fa-tablet"></i> LG</div>
+        <div class="brand-item"><i class="fa-solid fa-satellite-dish"></i> Huawei</div>
+        <div class="brand-item"><i class="fa-solid fa-camera"></i> Sony</div>
+        <div class="brand-item"><i class="fa-solid fa-signal"></i> Nokia</div>
+        <div class="brand-item"><i class="fa-brands fa-apple"></i> Apple</div>
+        <div class="brand-item"><i class="fa-solid fa-mobile-screen"></i> Samsung</div>
+        <div class="brand-item"><i class="fa-solid fa-mobile-screen-button"></i> Motorola</div>
+        <div class="brand-item"><i class="fa-brands fa-android"></i> Xiaomi</div>
+        <div class="brand-item"><i class="fa-solid fa-tablet"></i> LG</div>
+        <div class="brand-item"><i class="fa-solid fa-satellite-dish"></i> Huawei</div>
+        <div class="brand-item"><i class="fa-solid fa-camera"></i> Sony</div>
+        <div class="brand-item"><i class="fa-solid fa-signal"></i> Nokia</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SERVICES ========== -->
+  <section class="section" id="servicos">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">O que fazemos</span>
+        <h2 class="section-title">Nossos <span class="text-gradient">Serviços</span></h2>
+        <p class="section-sub">Soluções completas para o seu dispositivo móvel</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card" data-aos>
+          <div class="service-icon service-icon--green">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+          </div>
+          <h3>Assistência Técnica</h3>
+          <p>Consertos de tela, bateria, placa-mãe, câmera, conector de carga e muito mais para iPhone e Android.</p>
+        </div>
+
+        <div class="service-card" data-aos>
+          <div class="service-icon service-icon--blue">
+            <i class="fa-solid fa-mobile-screen"></i>
+          </div>
+          <h3>Venda de Aparelhos</h3>
+          <p>Smartphones novos e seminovos com procedência garantida. Encontre o modelo ideal para você.</p>
+        </div>
+
+        <div class="service-card" data-aos>
+          <div class="service-icon service-icon--purple">
+            <i class="fa-solid fa-headphones"></i>
+          </div>
+          <h3>Acessórios em Geral</h3>
+          <p>Capas, películas, carregadores, fones de ouvido e muito mais. Tudo que seu celular precisa.</p>
+        </div>
+
+        <div class="service-card" data-aos>
+          <div class="service-icon service-icon--orange">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <h3>Buscamos e Entregamos</h3>
+          <p>Comodidade para você. Buscamos o aparelho no seu endereço e devolvemos consertado. Sem sair de casa!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DEPOIMENTOS ========== -->
+  <section class="section section-dark" id="depoimentos">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">O que dizem nossos clientes</span>
+        <h2 class="section-title">Depoimentos <span class="text-gradient">Reais</span></h2>
+        <p class="section-sub">A satisfação dos nossos clientes fala por nós</p>
+      </div>
+      <div class="testimonials-wrapper">
+        <div class="testimonials-track" id="testimonialsTrack">
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p>"Meu iPhone 13 caiu e a tela estava destruída. Em menos de 2 horas a Leo Celulares buscou, consertou e entregou na minha casa. Serviço impecável!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">C</div>
+              <div>
+                <strong>Carlos Mendes</strong>
+                <span>Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p>"Comprei um Samsung seminovo e veio em perfeito estado, com nota e garantia. Melhor custo-benefício que encontrei na região. Recomendo demais!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">A</div>
+              <div>
+                <strong>Ana Paula Silva</strong>
+                <span>Aparecida de Goiânia</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p>"Levei meu Xiaomi com problema na bateria. Atendimento super rápido, preço justo e ainda deram garantia no serviço. Com certeza voltarei sempre!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">R</div>
+              <div>
+                <strong>Rodrigo Alves</strong>
+                <span>Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p>"O serviço de busca e entrega é fantástico! Não precisei sair de casa e meu celular voltou como novo. Atendimento via WhatsApp é super ágil!"</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">M</div>
+              <div>
+                <strong>Mariana Costa</strong>
+                <span>Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonials-controls">
+          <button class="testimonial-nav" id="prevBtn" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="testimonials-dots" id="testimonialsDots">
+            <button class="dot active" data-index="0"></button>
+            <button class="dot" data-index="1"></button>
+            <button class="dot" data-index="2"></button>
+            <button class="dot" data-index="3"></button>
+          </div>
+          <button class="testimonial-nav" id="nextBtn" aria-label="Próximo"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DIFERENCIAIS ========== -->
+  <section class="section section-dark" id="diferenciais">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Por que nos escolher</span>
+        <h2 class="section-title">Nossos <span class="text-gradient">Diferenciais</span></h2>
+      </div>
+
+      <div class="diferenciais-grid">
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-magnifying-glass-chart"></i>
+          <div>
+            <h4>Diagnóstico Gratuito</h4>
+            <p>Avaliamos seu aparelho sem custo, com transparência total sobre o problema.</p>
+          </div>
+        </div>
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-bolt"></i>
+          <div>
+            <h4>Atendimento Ágil</h4>
+            <p>Muitos serviços são feitos no mesmo dia, para você não ficar sem o celular.</p>
+          </div>
+        </div>
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-medal"></i>
+          <div>
+            <h4>Peças com Qualidade</h4>
+            <p>Trabalhamos com peças de qualidade para garantir a durabilidade do reparo.</p>
+          </div>
+        </div>
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-shield-check"></i>
+          <div>
+            <h4>Garantia no Serviço</h4>
+            <p>Todos os reparos possuem garantia, porque nosso trabalho fala por si mesmo.</p>
+          </div>
+        </div>
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-headset"></i>
+          <div>
+            <h4>Suporte via WhatsApp</h4>
+            <p>Tire dúvidas e acompanhe seu reparo diretamente pelo WhatsApp, de forma rápida.</p>
+          </div>
+        </div>
+        <div class="diferencial" data-aos>
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <h4>Coleta e Entrega</h4>
+            <p>Buscamos e entregamos o aparelho até você, com praticidade e segurança.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SOBRE ========== -->
+  <section class="section" id="sobre">
+    <div class="container sobre-container">
+      <div class="sobre-image-wrap" data-aos>
+        <div class="sobre-image-card">
+          <i class="fa-brands fa-apple"></i>
+          <i class="fa-brands fa-android"></i>
+          <div class="sobre-patch">
+            <i class="fa-solid fa-star"></i>
+            <span>Especialistas certificados</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sobre-content" data-aos>
+        <span class="section-tag">Quem somos</span>
+        <h2 class="section-title">Sobre a <span class="text-gradient">Leo Celulares</span></h2>
+        <p>
+          Somos uma assistência técnica especializada em dispositivos móveis, com experiência
+          em reparos de iPhone e Android. Nossa missão é devolver o seu aparelho funcionando
+          como novo, com rapidez e preço justo.
+        </p>
+        <p>
+          Atendemos presencialmente e com serviço de coleta e entrega, tornando a experiência
+          ainda mais cômoda para nossos clientes. Qualidade, transparência e agilidade são
+          nossos pilares.
+        </p>
+
+        <ul class="sobre-list">
+          <li><i class="fa-solid fa-circle-check"></i> Especialistas em iPhone e Android</li>
+          <li><i class="fa-solid fa-circle-check"></i> Diagnóstico gratuito e rápido</li>
+          <li><i class="fa-solid fa-circle-check"></i> Peças de qualidade</li>
+          <li><i class="fa-solid fa-circle-check"></i> Serviço de busca e entrega</li>
+        </ul>
+
+        <a href="https://wa.me/5562986098281?text=Ol%C3%A1%2C+quero+saber+mais+sobre+os+servi%C3%A7os!" target="_blank" rel="noopener" class="btn btn-primary">
+          <i class="fa-brands fa-whatsapp"></i> Fale Conosco
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CTA BANNER ========== -->
+  <section class="cta-banner">
+    <div class="cta-banner-glow"></div>
+    <div class="container cta-banner-inner">
+      <div>
+        <h2>Precisando de reparo? <span class="text-gradient">Fale com a gente!</span></h2>
+        <p>Atendimento rápido, diagnóstico gratuito e com garantia. Chame agora no WhatsApp.</p>
+      </div>
+      <a href="https://wa.me/5562986098281?text=Ol%C3%A1%2C+preciso+de+um+reparo!" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+        <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Dúvidas frequentes</span>
+        <h2 class="section-title">Perguntas <span class="text-gradient">Frequentes</span></h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item" data-aos>
+          <button class="faq-question">
+            Vocês atendem qual marca de celulares?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Atendemos todas as principais marcas: Apple (iPhone), Samsung, Motorola, Xiaomi, LG, Huawei, Sony, Nokia e outras. Nossa equipe é especializada tanto em iOS quanto em Android.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-aos>
+          <button class="faq-question">
+            Os reparos possuem garantia?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Sim! Todos os nossos serviços possuem garantia. Trabalhamos com peças de qualidade para garantir a durabilidade do reparo e a sua total satisfação.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-aos>
+          <button class="faq-question">
+            Como funciona o serviço de busca e entrega?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>É simples! Entre em contato pelo WhatsApp, informe seu endereço e combinamos um horário. Buscamos seu aparelho, realizamos o reparo e entregamos de volta — sem você sair de casa.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-aos>
+          <button class="faq-question">
+            Qual o prazo para conserto?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>A maioria dos reparos é feita no mesmo dia. Para serviços mais complexos, como troca de placa, o prazo pode ser de 1 a 3 dias úteis. Sempre informamos o prazo antes de iniciar.</p>
+          </div>
+        </div>
+        <div class="faq-item" data-aos>
+          <button class="faq-question">
+            Quais formas de pagamento são aceitas?
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Aceitamos Pix, dinheiro, cartão de débito e crédito. Para parcelamentos no cartão, consulte as condições disponíveis no momento do atendimento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTATO ========== -->
+  <section class="section section-dark" id="contato">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag">Fale Conosco</span>
+        <h2 class="section-title">Entre em <span class="text-gradient">Contato</span></h2>
+        <p class="section-sub">Estamos prontos para ajudar você</p>
+      </div>
+
+      <div class="contato-grid">
+        <a href="https://wa.me/5562986098281" target="_blank" rel="noopener" class="contato-card" data-aos>
+          <div class="contato-icon contato-icon--green">
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+          <h4>WhatsApp</h4>
+          <p>(62) 98609-8281</p>
+          <span class="contato-link">Chamar agora <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+
+        <a href="https://www.instagram.com/_leo.celulares_" target="_blank" rel="noopener" class="contato-card" data-aos>
+          <div class="contato-icon contato-icon--pink">
+            <i class="fa-brands fa-instagram"></i>
+          </div>
+          <h4>Instagram</h4>
+          <p>@_leo.celulares_</p>
+          <span class="contato-link">Ver perfil <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+
+        <div class="contato-card" data-aos>
+          <div class="contato-icon contato-icon--blue">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <h4>Horário</h4>
+          <p>Seg – Sex: 8h às 18h</p>
+          <p>Sáb: 8h às 14h</p>
+          <span class="contato-link">Disponível no WhatsApp</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#hero" class="logo">
+        <span class="logo-icon logo-icon-pair" aria-hidden="true">
+          <i class="fa-brands fa-apple"></i>
+          <i class="fa-brands fa-android"></i>
+        </span>
+        <span class="logo-text">Leo <strong>Celulares</strong></span>
+      </a>
+      <div class="footer-meta">
+        <p class="footer-copy">© 2026 Leo Celulares. Todos os direitos reservados.</p>
+        <p class="footer-credit">Desenvolvido por <a href="https://itscomports.com.br/" target="_blank" rel="noopener" class="footer-credit-link">ITS Comports</a></p>
+      </div>
+      <div class="footer-social">
+        <a href="https://wa.me/5562986098281" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/_leo.celulares_" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== WHATSAPP FLOAT ========== -->
+  <a href="https://wa.me/5562986098281?text=Ol%C3%A1%2C+gostaria+de+um+or%C3%A7amento!" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chat no WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- ========== BACK TO TOP ========== -->
+  <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

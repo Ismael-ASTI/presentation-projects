@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BertzTech Digital — Posts Instagram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cyan:    #00FFFF;
+            --cyan-d:  #00CCCC;
+            --blue:    #0066FF;
+            --green:   #00FFAA;
+            --amber:   #FFAA00;
+            --purple:  #A855F7;
+            --bg:      #07080f;
+            --bg-soft: #0d0f1c;
+            --surface: rgba(13,15,28,0.85);
+            --text:    #e8f4f8;
+            --muted:   #7a9bb0;
+        }
+
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 32px 24px 60px;
+        }
+
+        /* ─── Page chrome ─── */
+        .page-header { text-align: center; margin-bottom: 40px; }
+        .page-header h1 {
+            font-family: "Sora", sans-serif;
+            font-size: 1.6rem;
+            color: var(--cyan);
+        }
+        .page-header p { color: #888; font-size: .9rem; margin-top: 6px; }
+        .page-header .badge {
+            display: inline-block;
+            background: rgba(0,255,255,.08);
+            color: var(--cyan);
+            border: 1px solid rgba(0,255,255,.3);
+            border-radius: 999px;
+            font-size: .75rem;
+            padding: 4px 12px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* ─── Nav ─── */
+        .nav-bar {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            justify-content: center; margin-bottom: 32px;
+        }
+        .nav-btn {
+            background: #111520; color: var(--muted);
+            border: 1px solid #1e2a3a; border-radius: 999px;
+            padding: 8px 18px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: .82rem; font-weight: 600; cursor: pointer;
+            transition: all .2s;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--cyan); color: #07080f; border-color: var(--cyan);
+        }
+
+        /* ─── Cards wrapper ─── */
+        .cards-wrapper { display: flex; flex-direction: column; align-items: center; gap: 48px; }
+
+        .post-container { display: none; flex-direction: column; align-items: center; gap: 12px; }
+        .post-container.visible { display: flex; }
+
+        .post-label { font-size: .78rem; color: #444; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+
+        .card {
+            width: 540px; height: 540px;
+            position: relative; overflow: hidden;
+            border-radius: 18px;
+            box-shadow: 0 32px 80px rgba(0,0,0,.7);
+        }
+
+        .print-hint { font-size: .76rem; color: #333; text-align: center; }
+        .print-hint kbd {
+            background: #111; color: #999;
+            border: 1px solid #222; border-radius: 4px;
+            padding: 2px 8px; font-size: .74rem;
+        }
+
+        /* ─── Format & Download ─── */
+        .format-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+        .fmt-btn {
+            background: #111520; color: var(--muted);
+            border: 1.5px solid #1e2a3a; border-radius: 999px;
+            padding: 7px 22px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: .85rem; font-weight: 700; cursor: pointer; transition: all .2s;
+        }
+        .fmt-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .fmt-btn.active { background: var(--cyan); color: #07080f; border-color: var(--cyan); }
+        .dl-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--cyan); color: #07080f;
+            border: none; border-radius: 999px; padding: 11px 28px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: .9rem; font-weight: 700; cursor: pointer;
+            transition: opacity .2s;
+            box-shadow: 0 4px 24px rgba(0,255,255,.25);
+        }
+        .dl-btn:hover { opacity: .85; }
+        .dl-btn:disabled { opacity: .45; cursor: wait; }
+        .dl-section { text-align: center; margin-bottom: 28px; }
+
+        /* ─── Export mode ─── */
+        body.export-mode { padding: 0; background: transparent; }
+        body.export-mode .page-header,
+        body.export-mode .format-bar,
+        body.export-mode .dl-section,
+        body.export-mode .nav-bar,
+        body.export-mode .post-label,
+        body.export-mode .print-hint { display: none !important; }
+        body.export-mode .cards-wrapper { gap: 0; min-height: 100vh; justify-content: center; }
+        body.export-mode .card { width: 100vw !important; height: 100vh !important; border-radius: 0; box-shadow: none; }
+
+        /* ═══════════════════════════════
+           CARD STYLES
+        ═══════════════════════════════ */
+
+        /* ── Card 1: Institucional ── */
+        .card-brand {
+            background: linear-gradient(135deg, #050c18 0%, #070b1a 50%, #030710 100%);
+        }
+        .card-brand .ray {
+            position: absolute;
+            top: -120px; left: -80px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(0,255,255,.12) 0%, transparent 65%);
+        }
+        .card-brand .ray2 {
+            position: absolute;
+            bottom: -100px; right: -100px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(0,102,255,.1) 0%, transparent 65%);
+        }
+        .card-brand .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 36px 40px;
+        }
+        .card-brand .top-row { display: flex; align-items: center; justify-content: space-between; }
+        .card-brand .logo-row { display: flex; align-items: center; gap: 10px; }
+        .card-brand .logo-circle {
+            width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+            border: 2px solid var(--cyan); flex-shrink: 0;
+        }
+        .card-brand .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-brand .logo-name { font-family: "Sora", sans-serif; font-weight: 700; font-size: .88rem; color: var(--text); }
+        .card-brand .pill {
+            font-size: .65rem; color: var(--cyan); font-weight: 700;
+            letter-spacing: .12em; text-transform: uppercase;
+            border: 1px solid rgba(0,255,255,.3); border-radius: 999px; padding: 3px 10px;
+        }
+        .card-brand .headline {
+            font-family: "Sora", sans-serif;
+            font-size: 2rem; font-weight: 800; line-height: 1.15; color: var(--text);
+        }
+        .card-brand .headline span {
+            background: linear-gradient(90deg, var(--cyan), var(--blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .card-brand .sub { font-size: .83rem; color: var(--muted); line-height: 1.5; margin-top: 10px; }
+        .card-brand .tag-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .card-brand .tag {
+            background: rgba(0,255,255,.08); color: var(--cyan);
+            border: 1px solid rgba(0,255,255,.2); border-radius: 999px;
+            font-size: .68rem; font-weight: 700; padding: 4px 12px;
+        }
+        .card-brand .footer-row { display: flex; align-items: center; justify-content: space-between; }
+        .card-brand .url { font-size: .72rem; color: var(--muted); }
+        .card-brand .url span { color: var(--cyan); }
+
+        /* ── Card 2: Assistência Técnica ── */
+        .card-assist {
+            background: linear-gradient(140deg, #050c20 0%, #060a18 55%, #050812 100%);
+        }
+        .card-assist .stripe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--blue));
+        }
+        .card-assist .icon-bg {
+            position: absolute; bottom: 20px; right: -10px;
+            font-size: 9rem; color: rgba(0,255,255,.04);
+        }
+        .card-assist .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px 40px;
+        }
+        .card-assist .icon-badge {
+            width: 54px; height: 54px;
+            background: linear-gradient(135deg, var(--cyan), var(--blue));
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; color: #07080f;
+        }
+        .card-assist h2 { font-family: "Sora", sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1.2; margin-top: 16px; }
+        .card-assist h2 span { color: var(--cyan); }
+        .card-assist .desc { font-size: .82rem; color: var(--muted); line-height: 1.55; margin-top: 8px; }
+        .card-assist .list { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-top: 4px; }
+        .card-assist .list li { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--text); }
+        .card-assist .list li i { color: var(--cyan); font-size: .7rem; }
+        .card-assist .bottom { display: flex; align-items: center; justify-content: space-between; }
+        .card-assist .cta-pill { background: var(--cyan); color: #07080f; border-radius: 999px; padding: 8px 20px; font-weight: 700; font-size: .78rem; }
+        .card-assist .brand-sm { font-family: "Sora", sans-serif; font-size: .72rem; color: var(--muted); }
+        .card-assist .brand-sm span { color: var(--cyan); }
+
+        /* ── Card 3: Película ── */
+        .card-pelicula {
+            background: linear-gradient(145deg, #061a10 0%, #060d10 55%, #071512 100%);
+        }
+        .card-pelicula .glow {
+            position: absolute; bottom: -80px; right: 50%;
+            transform: translateX(50%);
+            width: 340px; height: 340px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,170,.1) 0%, transparent 65%);
+        }
+        .card-pelicula .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px 40px;
+        }
+        .card-pelicula .icon-badge {
+            width: 54px; height: 54px;
+            background: rgba(0,255,170,.12); border: 1.5px solid rgba(0,255,170,.35);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; color: var(--green);
+        }
+        .card-pelicula h2 { font-family: "Sora", sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1.2; margin-top: 16px; }
+        .card-pelicula h2 span { color: var(--green); }
+        .card-pelicula .desc { font-size: .82rem; color: var(--muted); line-height: 1.55; margin-top: 8px; }
+        .card-pelicula .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .card-pelicula .chip {
+            background: rgba(0,255,170,.08); color: var(--green);
+            border: 1px solid rgba(0,255,170,.22); border-radius: 999px;
+            font-size: .72rem; font-weight: 600; padding: 5px 12px;
+        }
+        .card-pelicula .highlight {
+            background: rgba(0,255,170,.07); border-left: 3px solid var(--green);
+            border-radius: 6px; padding: 10px 14px; font-size: .8rem; color: var(--text);
+        }
+        .card-pelicula .highlight strong { color: var(--green); }
+        .card-pelicula .bottom { display: flex; align-items: center; justify-content: space-between; }
+        .card-pelicula .cta-pill { background: var(--green); color: #06141b; border-radius: 999px; padding: 8px 20px; font-weight: 700; font-size: .78rem; }
+        .card-pelicula .brand-sm { font-family: "Sora", sans-serif; font-size: .72rem; color: var(--muted); }
+        .card-pelicula .brand-sm span { color: var(--green); }
+
+        /* ── Card 4: Acessórios ── */
+        .card-acess {
+            background: linear-gradient(145deg, #1a0e06 0%, #0f0812 55%, #0a0615 100%);
+        }
+        .card-acess .orb {
+            position: absolute; top: -60px; right: -60px;
+            width: 260px; height: 260px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,170,0,.12), transparent 65%);
+        }
+        .card-acess .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 40px 40px;
+        }
+        .card-acess .icon-badge {
+            width: 54px; height: 54px;
+            background: rgba(255,170,0,.12); border: 1.5px solid rgba(255,170,0,.35);
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; color: var(--amber);
+        }
+        .card-acess h2 { font-family: "Sora", sans-serif; font-size: 1.7rem; font-weight: 800; color: var(--text); line-height: 1.2; margin-top: 16px; }
+        .card-acess h2 span { color: var(--amber); }
+        .card-acess .desc { font-size: .82rem; color: var(--muted); line-height: 1.55; margin-top: 8px; }
+        .card-acess .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .card-acess .gi {
+            background: rgba(255,170,0,.06); border: 1px solid rgba(255,170,0,.15);
+            border-radius: 10px; padding: 9px 12px;
+        }
+        .card-acess .gi .gt { font-size: .72rem; font-weight: 700; color: var(--amber); margin-bottom: 3px; }
+        .card-acess .gi .gd { font-size: .68rem; color: var(--muted); line-height: 1.4; }
+        .card-acess .bottom { display: flex; align-items: center; justify-content: space-between; }
+        .card-acess .cta-pill { background: var(--amber); color: #07080f; border-radius: 999px; padding: 8px 20px; font-weight: 700; font-size: .78rem; }
+        .card-acess .brand-sm { font-family: "Sora", sans-serif; font-size: .72rem; color: var(--muted); }
+        .card-acess .brand-sm span { color: var(--amber); }
+
+        /* ── Card 5: Como Funciona ── */
+        .card-como {
+            background: linear-gradient(145deg, #060b18 0%, #07080f 55%, #080615 100%);
+        }
+        .card-como .grid-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,255,255,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,255,.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .card-como .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 36px 40px;
+        }
+        .card-como .top { display: flex; align-items: center; justify-content: space-between; }
+        .card-como .kicker {
+            font-size: .68rem; color: var(--cyan); font-weight: 700;
+            letter-spacing: .12em; text-transform: uppercase;
+            border: 1px solid rgba(0,255,255,.3); border-radius: 999px; padding: 3px 10px;
+        }
+        .card-como .brand-sm { font-family: "Sora", sans-serif; font-size: .72rem; color: var(--muted); }
+        .card-como .brand-sm span { color: var(--cyan); }
+        .card-como h2 { font-family: "Sora", sans-serif; font-size: 1.65rem; font-weight: 800; color: var(--text); line-height: 1.2; }
+        .card-como h2 span { color: var(--cyan); }
+        .card-como .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .card-como .step {
+            background: rgba(0,255,255,.05); border: 1px solid rgba(0,255,255,.1);
+            border-radius: 12px; padding: 12px 14px; position: relative;
+        }
+        .card-como .step .num {
+            font-family: "Sora", sans-serif; font-size: 1.8rem; font-weight: 800;
+            color: rgba(0,255,255,.15); position: absolute; top: 6px; right: 10px;
+            line-height: 1;
+        }
+        .card-como .step .step-title { font-size: .78rem; font-weight: 700; color: var(--cyan); margin-bottom: 4px; }
+        .card-como .step .step-desc { font-size: .7rem; color: var(--muted); line-height: 1.4; }
+        .card-como .step-icons { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+        .card-como .step-icons i { color: var(--cyan); font-size: .75rem; }
+        .card-como .url { font-size: .72rem; color: var(--muted); text-align: center; }
+        .card-como .url span { color: var(--cyan); }
+
+        /* ── Card 6: CTA ── */
+        .card-cta {
+            background: linear-gradient(145deg, #050c18 0%, var(--bg) 50%, #030710 100%);
+        }
+        .card-cta .wave {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 200px;
+            background: linear-gradient(0deg, rgba(0,255,255,.06), transparent);
+        }
+        .card-cta .inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px 48px; gap: 18px;
+        }
+        .card-cta .logo-circle {
+            width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
+            border: 3px solid var(--cyan);
+            box-shadow: 0 0 28px rgba(0,255,255,.25);
+        }
+        .card-cta .logo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-cta .brand-name { font-family: "Sora", sans-serif; font-weight: 700; font-size: .95rem; color: var(--text); }
+        .card-cta h2 { font-family: "Sora", sans-serif; font-size: 1.7rem; font-weight: 800; line-height: 1.2; color: var(--text); }
+        .card-cta h2 span { background: linear-gradient(90deg, var(--cyan), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-cta .sub { font-size: .82rem; color: var(--muted); line-height: 1.5; max-width: 360px; }
+        .card-cta .wa-btn {
+            display: flex; align-items: center; gap: 10px;
+            background: #25D366; color: #fff; border-radius: 999px;
+            padding: 12px 28px; font-weight: 700; font-size: .88rem;
+        }
+        .card-cta .wa-btn i { font-size: 1.1rem; }
+        .card-cta .url { font-size: .72rem; color: var(--muted); }
+        .card-cta .url span { color: var(--cyan); }
+
+        /* ─── Story format (1080×1920 → scaled 405×720) ─── */
+        .card-story { width: 405px; height: 720px; }
+        .post-container[data-format="story"] .post-label { max-width: 405px; }
+
+        .story-inner {
+            position: relative; z-index: 1; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 28px 28px 24px;
+        }
+        .story-hdr { display: flex; align-items: center; gap: 10px; }
+        .story-hdr .lc { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid var(--cyan); flex-shrink: 0; }
+        .story-hdr .lc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .story-hdr .ln { font-family: "Sora", sans-serif; font-weight: 700; font-size: .8rem; color: var(--text); flex: 1; }
+        .story-hdr .kk { font-size: .62rem; color: var(--cyan); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; border: 1px solid rgba(0,255,255,.3); border-radius: 999px; padding: 3px 9px; }
+        .story-icon { width: 58px; height: 58px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .story-icon.c { background: linear-gradient(135deg, var(--cyan), var(--blue)); color: #07080f; }
+        .story-icon.g { background: rgba(0,255,170,.12); border: 1.5px solid rgba(0,255,170,.3); color: var(--green); }
+        .story-icon.a { background: rgba(255,170,0,.12); border: 1.5px solid rgba(255,170,0,.3); color: var(--amber); }
+        .story-ttl { font-family: "Sora", sans-serif; font-size: 1.65rem; font-weight: 800; line-height: 1.15; color: var(--text); }
+        .story-ttl .cc { background: linear-gradient(90deg, var(--cyan), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .story-ttl .cg { color: var(--green); }
+        .story-ttl .ca { color: var(--amber); }
+        .story-dsc { font-size: .78rem; color: var(--muted); line-height: 1.55; margin-top: 6px; }
+        .story-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+        .story-list li { display: flex; align-items: flex-start; gap: 9px; font-size: .76rem; color: var(--text); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); border-radius: 10px; padding: 8px 11px; }
+        .story-list li i { color: var(--cyan); font-size: .68rem; margin-top: 2px; flex-shrink: 0; }
+        .story-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+        .story-chips .chip { background: rgba(0,255,170,.08); color: var(--green); border: 1px solid rgba(0,255,170,.22); border-radius: 999px; font-size: .7rem; font-weight: 600; padding: 5px 11px; }
+        .story-hl { background: rgba(0,255,170,.07); border-left: 3px solid var(--green); border-radius: 6px; padding: 11px 13px; font-size: .76rem; color: var(--text); line-height: 1.5; }
+        .story-hl strong { color: var(--green); }
+        .story-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .story-steps .ss { background: rgba(0,255,255,.05); border: 1px solid rgba(0,255,255,.1); border-radius: 10px; padding: 10px 11px; position: relative; }
+        .story-steps .ss .sn { font-family: "Sora",sans-serif; font-size: 1.6rem; font-weight: 800; color: rgba(0,255,255,.12); position: absolute; top: 4px; right: 8px; line-height: 1; }
+        .story-steps .ss .st { font-size: .72rem; font-weight: 700; color: var(--cyan); margin-bottom: 3px; }
+        .story-steps .ss .sd { font-size: .66rem; color: var(--muted); line-height: 1.35; }
+        .story-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .story-grid2 .gi { background: rgba(255,170,0,.06); border: 1px solid rgba(255,170,0,.14); border-radius: 10px; padding: 9px 10px; }
+        .story-grid2 .gi .gt { font-size: .7rem; font-weight: 700; color: var(--amber); margin-bottom: 3px; }
+        .story-grid2 .gi .gd { font-size: .65rem; color: var(--muted); line-height: 1.4; }
+        .story-ftr { display: flex; align-items: center; justify-content: space-between; }
+        .story-ftr .url { font-size: .68rem; color: var(--muted); }
+        .story-ftr .url span { color: var(--cyan); }
+        .story-ftr .cta { border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: .73rem; color: #07080f; }
+        .story-ftr .cta.c { background: var(--cyan); }
+        .story-ftr .cta.g { background: var(--green); }
+        .story-ftr .cta.a { background: var(--amber); }
+        .story-cta-wrap { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; text-align: center; padding: 36px 34px 30px; }
+        .story-cta-logo { width: 88px; height: 88px; border-radius: 50%; overflow: hidden; border: 3px solid var(--cyan); box-shadow: 0 0 28px rgba(0,255,255,.25); }
+        .story-cta-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .story-cta-nm { font-family: "Sora", sans-serif; font-weight: 700; font-size: .86rem; color: var(--text); margin-top: 8px; }
+        .story-cta-h { font-family: "Sora", sans-serif; font-size: 1.85rem; font-weight: 800; line-height: 1.15; color: var(--text); }
+        .story-cta-h span { background: linear-gradient(90deg, var(--cyan), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .story-cta-s { font-size: .78rem; color: var(--muted); line-height: 1.5; max-width: 290px; }
+        .story-wa { display: flex; align-items: center; gap: 10px; background: #25D366; color: #fff; border-radius: 999px; padding: 13px 28px; font-weight: 700; font-size: .86rem; }
+        .story-wa i { font-size: 1.1rem; }
+        .story-cta-url { font-size: .7rem; color: var(--muted); }
+        .story-cta-url span { color: var(--cyan); }
+
+        /* ─── Caption Box ─── */
+        .caption-box {
+            width: 100%; max-width: 540px;
+            background: #0d0f1c; border: 1px solid #1a2035;
+            border-radius: 12px; overflow: hidden; margin-top: 4px;
+        }
+        .post-container[data-format="story"] .caption-box { max-width: 405px; }
+        .caption-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; border-bottom: 1px solid #151a2e;
+        }
+        .caption-label {
+            font-size: .75rem; color: var(--cyan); font-weight: 700;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .copy-btn {
+            background: rgba(0,255,255,.1); color: var(--cyan);
+            border: 1px solid rgba(0,255,255,.25); border-radius: 999px;
+            padding: 4px 12px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: .72rem; font-weight: 600; cursor: pointer; transition: all .2s;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .copy-btn:hover { background: rgba(0,255,255,.2); }
+        .copy-btn.copied { background: var(--cyan); color: #07080f; border-color: var(--cyan); }
+        .caption-text {
+            font-family: "Space Grotesk", sans-serif; font-size: .78rem;
+            color: var(--muted); line-height: 1.6;
+            padding: 12px 14px; white-space: pre-wrap; word-break: break-word;
+            margin: 0; max-height: 200px; overflow-y: auto;
+        }
+        .caption-text::-webkit-scrollbar { width: 4px; }
+        .caption-text::-webkit-scrollbar-thumb { background: #1a2a3a; border-radius: 4px; }
+
+        /* ─── Print mode ─── */
+        @media print {
+            body { background: transparent; padding: 0; }
+            .page-header, .nav-bar, .format-bar, .print-hint, .post-label, .caption-box { display: none !important; }
+            .post-container { display: flex !important; }
+            .card { border-radius: 0; box-shadow: none; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="page-header">
+    <h1>BertzTech Digital — Posts para Instagram</h1>
+    <p>Selecione o card, baixe o PNG e publique.</p>
+    <span class="badge">6 layouts · Feed 1:1 e Stories 9:16</span>
+</header>
+
+<div class="format-bar">
+    <button class="fmt-btn active" data-format="feed">📱 Feed 1:1</button>
+    <button class="fmt-btn" data-format="story">📲 Stories 9:16</button>
+</div>
+<div class="dl-section">
+    <button class="dl-btn" id="downloadBtn">
+        <i class="fa-solid fa-download"></i> Baixar PNG
+    </button>
+</div>
+
+<nav class="nav-bar" id="navBar">
+    <button class="nav-btn active" data-card="brand">Institucional</button>
+    <button class="nav-btn" data-card="assist">Assistência Técnica</button>
+    <button class="nav-btn" data-card="pelicula">Película</button>
+    <button class="nav-btn" data-card="acess">Acessórios</button>
+    <button class="nav-btn" data-card="como">Como Funciona</button>
+    <button class="nav-btn" data-card="cta">CTA / WhatsApp</button>
+</nav>
+
+<div class="cards-wrapper">
+
+    <!-- ─── CARD 1: Institucional ─── -->
+    <div class="post-container visible" id="card-brand" data-format="feed" data-card="brand">
+        <span class="post-label">Card 1 — Institucional</span>
+        <div class="card card-brand">
+            <div class="ray"></div>
+            <div class="ray2"></div>
+            <div class="inner">
+                <div class="top-row">
+                    <div class="logo-row">
+                        <div class="logo-circle"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                        <span class="logo-name">BertzTech Digital</span>
+                    </div>
+                    <span class="pill">Assistência Técnica</span>
+                </div>
+                <div>
+                    <h1 class="headline">Sua tecnologia<br>pronta, <span>sem você<br>sair de casa.</span></h1>
+                    <p class="sub">Assistência técnica, troca de película e venda de acessórios com sistema Leva e Traz gratuito em Uruaçu, GO.</p>
+                </div>
+                <div class="tag-row">
+                    <span class="tag">🔧 Diagnóstico Grátis</span>
+                    <span class="tag">🚗 Leva e Traz</span>
+                    <span class="tag">✅ Com Garantia</span>
+                </div>
+                <div class="footer-row">
+                    <span class="url">📲 <span>(62) 98169-2621</span> · Uruaçu, GO</span>
+                    <span class="tag">@bertztech_digital</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Seu celular danificado? Não precisa sair de casa! 📲
+
+Na BertzTech Digital a gente busca, conserta e devolve perfeito — com garantia e frete grátis.
+
+✅ Assistência técnica profissional
+✅ Troca de película com acabamento impecável
+✅ Acessórios premium entregues na sua porta
+✅ Diagnóstico 100% gratuito
+
+🚗 Sistema Leva e Traz Gratuito para toda Uruaçu e região.
+
+Fale comigo agora pelo WhatsApp 👇
+📲 (62) 98169-2621
+📍 Uruaçu, Goiás
+
+#BertzTechDigital #AssistênciaTécnica #ConsertoDeCelular #LevaETraz #Uruaçu #Goiás #TecnologiaEmDomicílio</pre>
+        </div>
+    </div>
+
+    <!-- ─── CARD 2: Assistência Técnica ─── -->
+    <div class="post-container" id="card-assist" data-format="feed" data-card="assist">
+        <span class="post-label">Card 2 — Assistência Técnica</span>
+        <div class="card card-assist">
+            <div class="stripe"></div>
+            <i class="fa-solid fa-screwdriver-wrench icon-bg"></i>
+            <div class="inner">
+                <div class="icon-badge"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <div>
+                    <h2>Assistência<br><span>Técnica</span></h2>
+                    <p class="desc">Reparo profissional de celulares com diagnóstico gratuito. Tela, bateria, conector e muito mais — resolvidos com agilidade.</p>
+                </div>
+                <ul class="list">
+                    <li><i class="fa-solid fa-circle-check"></i> Troca de tela e bateria</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Reparo de conector de carregamento</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Diagnóstico gratuito e transparente</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Sistema Leva e Traz — você não sai de casa</li>
+                </ul>
+                <div class="bottom">
+                    <span class="brand-sm">BertzTech <span>Digital</span> · (62) 98169-2621</span>
+                    <span class="cta-pill">Solicitar →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Tela trincada? Bateria viciada? Carregador não funciona? 🔧
+
+Para! Antes de pensar em comprar um celular novo, fala comigo.
+
+Na BertzTech Digital você tem:
+→ Diagnóstico 100% gratuito
+→ Reparo profissional com peças de qualidade
+→ Prazo ágil — sem enrolação
+→ Garantia em todos os serviços
+
+E o melhor: você não precisa sair de casa! 🚗
+Busco seu aparelho, resolvo e devolvo pronto.
+
+📲 (62) 98169-2621 — Chama no WhatsApp!
+📍 Uruaçu, Goiás
+
+#AssistênciaTécnica #ConsertoDeCelular #TrocaDeTela #TrocaDeBateria #BertzTechDigital #Uruaçu</pre>
+        </div>
+    </div>
+
+    <!-- ─── CARD 3: Película ─── -->
+    <div class="post-container" id="card-pelicula" data-format="feed" data-card="pelicula">
+        <span class="post-label">Card 3 — Troca de Película</span>
+        <div class="card card-pelicula">
+            <div class="glow"></div>
+            <div class="inner">
+                <div class="icon-badge"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <div>
+                    <h2>Troca de<br><span>Película</span></h2>
+                    <p class="desc">Aplicação profissional com precisão. Proteja sua tela contra arranhões e impactos com acabamento perfeito.</p>
+                </div>
+                <div class="chips">
+                    <span class="chip">Vidro Temperado</span>
+                    <span class="chip">Anti-impacto</span>
+                    <span class="chip">Anti-reflexo</span>
+                    <span class="chip">Privacy</span>
+                    <span class="chip">Fosca</span>
+                    <span class="chip">Aplicação Perfeita</span>
+                </div>
+                <div class="highlight">
+                    <strong>Aplicação em domicílio</strong> — sem bolhas, sem poeira, com acabamento profissional garantido.
+                </div>
+                <div class="bottom">
+                    <span class="brand-sm">BertzTech <span>Digital</span> · (62) 98169-2621</span>
+                    <span class="cta-pill">Proteja já →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Sua tela sem proteção é um risco que não vale correr. 📱
+
+Uma queda, um arranhão… e lá se vai centenas de reais em reparo. A película certa resolve isso por muito menos!
+
+Na BertzTech Digital você escolhe sua proteção:
+→ Vidro temperado comum e anti-impacto
+→ Película fosca, privacy e anti-reflexo
+→ Aplicação profissional sem bolhas
+→ Feita no conforto da sua casa
+
+🚗 Sistema Leva e Traz — busco seu celular onde você estiver!
+
+📲 (62) 98169-2621
+📸 @bertztech_digital
+📍 Uruaçu, Goiás
+
+#TrocaDePelícula #VidroTemplado #ProteçãoDeCelular #BertzTechDigital #Uruaçu #AssistênciaTécnica</pre>
+        </div>
+    </div>
+
+    <!-- ─── CARD 4: Acessórios ─── -->
+    <div class="post-container" id="card-acess" data-format="feed" data-card="acess">
+        <span class="post-label">Card 4 — Venda de Acessórios</span>
+        <div class="card card-acess">
+            <div class="orb"></div>
+            <div class="inner">
+                <div class="icon-badge"><i class="fa-solid fa-bag-shopping"></i></div>
+                <div>
+                    <h2>Acessórios<br><span>Premium</span></h2>
+                    <p class="desc">Produtos de qualidade com garantia, entregues na sua casa. Tudo para o seu celular em um só lugar.</p>
+                </div>
+                <div class="grid-2">
+                    <div class="gi"><div class="gt">Carregadores</div><div class="gd">Originais e compatíveis com garantia</div></div>
+                    <div class="gi"><div class="gt">Cabos & Fones</div><div class="gd">USB-C, Lightning e P2 de qualidade</div></div>
+                    <div class="gi"><div class="gt">Capas & Cases</div><div class="gd">Proteção com estilo para seu modelo</div></div>
+                    <div class="gi"><div class="gt">Entrega em Casa</div><div class="gd">Frete grátis em Uruaçu e região</div></div>
+                </div>
+                <div class="bottom">
+                    <span class="brand-sm">BertzTech <span>Digital</span> · (62) 98169-2621</span>
+                    <span class="cta-pill">Ver produtos →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Precisa de acessório para o seu celular? A gente entrega na sua porta! 📦
+
+Chega de sair correndo atrás de carregador, cabo ou capa. Na BertzTech Digital você compra pela internet e recebe em casa — com qualidade garantida.
+
+🛒 O que temos:
+→ Carregadores originais e compatíveis
+→ Cabos USB-C, Lightning e mais
+→ Fones de ouvido com e sem fio
+→ Capas e cases para todos os modelos
+→ Películas e vidros temperados
+
+✅ Garantia em todos os produtos
+🚗 Entrega grátis em Uruaçu e região
+
+📲 Manda mensagem e peça o catálogo!
+(62) 98169-2621 — WhatsApp
+
+#AcessóriosCelular #Carregador #CapaParaCelular #BertzTechDigital #Uruaçu #EntregaEmCasa</pre>
+        </div>
+    </div>
+
+    <!-- ─── CARD 5: Como Funciona ─── -->
+    <div class="post-container" id="card-como" data-format="feed" data-card="como">
+        <span class="post-label">Card 5 — Como Funciona</span>
+        <div class="card card-como">
+            <div class="grid-bg"></div>
+            <div class="inner">
+                <div class="top">
+                    <h2>Como <span>Funciona</span></h2>
+                    <span class="kicker">4 passos</span>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <span class="num">1</span>
+                        <div class="step-icons"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="step-title">Solicite</div>
+                        <div class="step-desc">Chama pelo site ou WhatsApp para iniciar.</div>
+                    </div>
+                    <div class="step">
+                        <span class="num">2</span>
+                        <div class="step-icons"><i class="fa-solid fa-car"></i></div>
+                        <div class="step-title">Coletamos</div>
+                        <div class="step-desc">Buscamos seu aparelho em casa ou trabalho.</div>
+                    </div>
+                    <div class="step">
+                        <span class="num">3</span>
+                        <div class="step-icons"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <div class="step-title">Resolvemos</div>
+                        <div class="step-desc">Fazemos o reparo ou entregamos o produto.</div>
+                    </div>
+                    <div class="step">
+                        <span class="num">4</span>
+                        <div class="step-icons"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="step-title">Entregamos</div>
+                        <div class="step-desc">Tudo pronto, com garantia e frete grátis.</div>
+                    </div>
+                </div>
+                <div class="url">🌐 <span>@bertztech_digital</span> · 📲 (62) 98169-2621</div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Só 4 passos para ter seu celular perfeito de volta 🔄
+
+Sem fila, sem deslocamento, sem complicação. Essa é a BertzTech Digital!
+
+1️⃣ SOLICITE → Chama no WhatsApp ou pelo site
+2️⃣ COLETAMOS → Buscamos seu aparelho onde você estiver
+3️⃣ RESOLVEMOS → Reparo ágil com peças de qualidade
+4️⃣ ENTREGAMOS → Perfeito, com garantia e frete grátis
+
+É simples assim. Enquanto a gente cuida do seu celular, você faz o que importa. 😊
+
+Salva esse post e compartilha com quem precisa! 👇
+📲 (62) 98169-2621
+📍 Uruaçu, Goiás
+
+#ComoFunciona #ConsertoDeCelular #LevaETraz #BertzTechDigital #Uruaçu #Praticidade</pre>
+        </div>
+    </div>
+
+    <!-- ─── CARD 6: CTA ─── -->
+    <div class="post-container" id="card-cta" data-format="feed" data-card="cta">
+        <span class="post-label">Card 6 — CTA / WhatsApp</span>
+        <div class="card card-cta">
+            <div class="wave"></div>
+            <div class="inner">
+                <div class="logo-circle"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                <span class="brand-name">BertzTech Digital</span>
+                <h2>Pronto para chamar<br>o <span>técnico?</span></h2>
+                <p class="sub">Diagnóstico gratuito, atendimento em domicílio e tratamento com qualidade. Tudo isso sem você sair de casa.</p>
+                <div class="wa-btn">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    (62) 98169-2621
+                </div>
+                <span class="url">📸 <span>@bertztech_digital</span> · Uruaçu, GO</span>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Não deixa o celular quebrado parado! Chama a BertzTech. 🔧📲
+
+Diagnóstico gratuito + atendimento em domicílio + garantia no serviço.
+
+Você merece praticidade. Por isso a gente busca, conserta e devolve — sem você gastar tempo nem combustível.
+
+👉 É fácil, rápido e sem complicação!
+
+📲 (62) 98169-2621 — WhatsApp
+📸 Instagram: @bertztech_digital
+📍 Uruaçu, Goiás
+
+#BertzTechDigital #PrimeiroAtendimento #ConsertoDeCelular #AssistênciaTécnica #Uruaçu #Goiás #TecnologiaEmDomicílio</pre>
+        </div>
+    </div>
+
+
+    <!-- ───────── STORIES ───────── -->
+
+    <!-- ─── STORY 1: Institucional ─── -->
+    <div class="post-container" id="story-brand" data-format="story" data-card="brand">
+        <span class="post-label">Story 1 — Institucional · 9:16</span>
+        <div class="card card-story card-brand">
+            <div class="ray"></div><div class="ray2"></div>
+            <div class="story-inner">
+                <div class="story-hdr">
+                    <div class="lc"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <span class="ln">BertzTech Digital</span>
+                    <span class="kk">Assistência</span>
+                </div>
+                <div>
+                    <h2 class="story-ttl">Sua tecnologia<br>pronta,<br><span class="cc">sem sair de casa.</span></h2>
+                    <p class="story-dsc">Assistência técnica, película e acessórios com sistema Leva e Traz gratuito em Uruaçu, GO.</p>
+                </div>
+                <ul class="story-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Diagnóstico gratuito</li>
+                    <li><i class="fa-solid fa-car"></i> Leva e Traz · você não sai de casa</li>
+                    <li><i class="fa-solid fa-shield-halved"></i> Garantia em todos os serviços</li>
+                    <li><i class="fa-brands fa-whatsapp"></i> Atendimento rápido via WhatsApp</li>
+                </ul>
+                <div class="story-ftr">
+                    <span class="url">📲 <span>(62) 98169-2621</span></span>
+                    <span class="cta c">Chamar agora →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Seu celular danificado? Não precisa sair de casa! 📲
+
+Na BertzTech Digital a gente busca, conserta e devolve perfeito — com garantia e frete grátis.
+
+✅ Assistência técnica profissional
+✅ Troca de película com acabamento impecável
+✅ Acessórios premium entregues na sua porta
+✅ Diagnóstico 100% gratuito
+
+🚗 Sistema Leva e Traz Gratuito para toda Uruaçu e região.
+
+Fale comigo agora pelo WhatsApp 👇
+📲 (62) 98169-2621
+📍 Uruaçu, Goiás
+
+#BertzTechDigital #AssistênciaTécnica #ConsertoDeCelular #LevaETraz #Uruaçu #Goiás #TecnologiaEmDomicílio</pre>
+        </div>
+    </div>
+
+    <!-- ─── STORY 2: Assistência Técnica ─── -->
+    <div class="post-container" id="story-assist" data-format="story" data-card="assist">
+        <span class="post-label">Story 2 — Assistência Técnica · 9:16</span>
+        <div class="card card-story card-assist">
+            <div class="stripe"></div>
+            <div class="story-inner">
+                <div class="story-hdr">
+                    <div class="lc"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <span class="ln">BertzTech Digital</span>
+                    <span class="kk">Reparo</span>
+                </div>
+                <div>
+                    <div class="story-icon c"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h2 class="story-ttl" style="margin-top:12px;">Assistência<br><span class="cc">Técnica</span></h2>
+                    <p class="story-dsc">Reparo profissional com diagnóstico gratuito. Agilidade e qualidade para o seu aparelho.</p>
+                </div>
+                <ul class="story-list">
+                    <li><i class="fa-solid fa-circle-check"></i> Troca de tela e bateria</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Reparo de conector de carregamento</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Diagnóstico gratuito e transparente</li>
+                    <li><i class="fa-solid fa-circle-check"></i> Leva e Traz — você fica em casa</li>
+                </ul>
+                <div class="story-ftr">
+                    <span class="url">BertzTech <span>Digital</span></span>
+                    <span class="cta c">Solicitar →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Tela trincada? Bateria viciada? Carregador não funciona? 🔧
+
+Para! Antes de pensar em comprar um celular novo, fala comigo.
+
+Na BertzTech Digital você tem:
+→ Diagnóstico 100% gratuito
+→ Reparo profissional com peças de qualidade
+→ Prazo ágil — sem enrolação
+→ Garantia em todos os serviços
+
+E o melhor: você não precisa sair de casa! 🚗
+Busco seu aparelho, resolvo e devolvo pronto.
+
+📲 (62) 98169-2621 — Chama no WhatsApp!
+📍 Uruaçu, Goiás
+
+#AssistênciaTécnica #ConsertoDeCelular #TrocaDeTela #TrocaDeBateria #BertzTechDigital #Uruaçu</pre>
+        </div>
+    </div>
+
+    <!-- ─── STORY 3: Película ─── -->
+    <div class="post-container" id="story-pelicula" data-format="story" data-card="pelicula">
+        <span class="post-label">Story 3 — Película · 9:16</span>
+        <div class="card card-story card-pelicula">
+            <div class="glow"></div>
+            <div class="story-inner">
+                <div class="story-hdr">
+                    <div class="lc"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <span class="ln">BertzTech Digital</span>
+                    <span class="kk" style="color:var(--green);border-color:rgba(0,255,170,.3);">Película</span>
+                </div>
+                <div>
+                    <div class="story-icon g"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <h2 class="story-ttl" style="margin-top:12px;">Troca de<br><span class="cg">Película</span></h2>
+                    <p class="story-dsc">Aplicação profissional sem bolhas. Proteja sua tela com acabamento impecável.</p>
+                </div>
+                <div class="story-chips">
+                    <span class="chip">Vidro Temperado</span>
+                    <span class="chip">Anti-impacto</span>
+                    <span class="chip">Anti-reflexo</span>
+                    <span class="chip">Privacy</span>
+                    <span class="chip">Fosca</span>
+                </div>
+                <div class="story-hl">
+                    <strong>Aplicação em domicílio</strong> — sem bolhas, sem poeira, resultado profissional garantido.
+                </div>
+                <div class="story-ftr">
+                    <span class="url">BertzTech <span>Digital</span></span>
+                    <span class="cta g">Proteja já →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Sua tela sem proteção é um risco que não vale correr. 📱
+
+Uma queda, um arranhão… e lá se vai centenas de reais em reparo. A película certa resolve isso por muito menos!
+
+Na BertzTech Digital você escolhe sua proteção:
+→ Vidro temperado comum e anti-impacto
+→ Película fosca, privacy e anti-reflexo
+→ Aplicação profissional sem bolhas
+→ Feita no conforto da sua casa
+
+🚗 Sistema Leva e Traz — busco seu celular onde você estiver!
+
+📲 (62) 98169-2621
+📸 @bertztech_digital
+📍 Uruaçu, Goiás
+
+#TrocaDePelícula #VidroTemplado #ProteçãoDeCelular #BertzTechDigital #Uruaçu #AssistênciaTécnica</pre>
+        </div>
+    </div>
+
+    <!-- ─── STORY 4: Acessórios ─── -->
+    <div class="post-container" id="story-acess" data-format="story" data-card="acess">
+        <span class="post-label">Story 4 — Acessórios · 9:16</span>
+        <div class="card card-story card-acess">
+            <div class="orb"></div>
+            <div class="story-inner">
+                <div class="story-hdr">
+                    <div class="lc"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <span class="ln">BertzTech Digital</span>
+                    <span class="kk" style="color:var(--amber);border-color:rgba(255,170,0,.3);">Acessórios</span>
+                </div>
+                <div>
+                    <div class="story-icon a"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <h2 class="story-ttl" style="margin-top:12px;">Acessórios<br><span class="ca">Premium</span></h2>
+                    <p class="story-dsc">Produtos de qualidade com garantia, entregues na sua porta. Tudo para o seu celular.</p>
+                </div>
+                <div class="story-grid2">
+                    <div class="gi"><div class="gt">Carregadores</div><div class="gd">Originais e compatíveis com garantia</div></div>
+                    <div class="gi"><div class="gt">Cabos & Fones</div><div class="gd">USB-C, Lightning e P2 de qualidade</div></div>
+                    <div class="gi"><div class="gt">Capas & Cases</div><div class="gd">Proteção com estilo para seu modelo</div></div>
+                    <div class="gi"><div class="gt">Entrega Grátis</div><div class="gd">Frete gratuito em Uruaçu e região</div></div>
+                </div>
+                <div class="story-ftr">
+                    <span class="url">BertzTech <span>Digital</span></span>
+                    <span class="cta a">Ver produtos →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Precisa de acessório para o seu celular? A gente entrega na sua porta! 📦
+
+Chega de sair correndo atrás de carregador, cabo ou capa. Na BertzTech Digital você compra pela internet e recebe em casa — com qualidade garantida.
+
+🛒 O que temos:
+→ Carregadores originais e compatíveis
+→ Cabos USB-C, Lightning e mais
+→ Fones de ouvido com e sem fio
+→ Capas e cases para todos os modelos
+→ Películas e vidros temperados
+
+✅ Garantia em todos os produtos
+🚗 Entrega grátis em Uruaçu e região
+
+📲 Manda mensagem e peça o catálogo!
+(62) 98169-2621 — WhatsApp
+
+#AcessóriosCelular #Carregador #CapaParaCelular #BertzTechDigital #Uruaçu #EntregaEmCasa</pre>
+        </div>
+    </div>
+
+    <!-- ─── STORY 5: Como Funciona ─── -->
+    <div class="post-container" id="story-como" data-format="story" data-card="como">
+        <span class="post-label">Story 5 — Como Funciona · 9:16</span>
+        <div class="card card-story card-como">
+            <div class="grid-bg"></div>
+            <div class="story-inner">
+                <div class="story-hdr">
+                    <div class="lc"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <span class="ln">BertzTech Digital</span>
+                    <span class="kk">4 passos</span>
+                </div>
+                <div>
+                    <h2 class="story-ttl">Como <span class="cc">Funciona</span></h2>
+                    <p class="story-dsc">Processo simples. Do chamado à entrega, tudo em 4 passos.</p>
+                </div>
+                <div class="story-steps">
+                    <div class="ss"><span class="sn">1</span><div class="st"><i class="fa-brands fa-whatsapp"></i> Solicite</div><div class="sd">Chama pelo site ou WhatsApp.</div></div>
+                    <div class="ss"><span class="sn">2</span><div class="st"><i class="fa-solid fa-car"></i> Coletamos</div><div class="sd">Buscamos em casa ou trabalho.</div></div>
+                    <div class="ss"><span class="sn">3</span><div class="st"><i class="fa-solid fa-screwdriver-wrench"></i> Resolvemos</div><div class="sd">Reparo ágil com qualidade.</div></div>
+                    <div class="ss"><span class="sn">4</span><div class="st"><i class="fa-solid fa-circle-check"></i> Entregamos</div><div class="sd">Pronto, com garantia e frete grátis.</div></div>
+                </div>
+                <div class="story-ftr">
+                    <span class="url">📲 <span>(62) 98169-2621</span></span>
+                    <span class="cta c">Solicitar →</span>
+                </div>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Só 4 passos para ter seu celular perfeito de volta 🔄
+
+Sem fila, sem deslocamento, sem complicação. Essa é a BertzTech Digital!
+
+1️⃣ SOLICITE → Chama no WhatsApp ou pelo site
+2️⃣ COLETAMOS → Buscamos seu aparelho onde você estiver
+3️⃣ RESOLVEMOS → Reparo ágil com peças de qualidade
+4️⃣ ENTREGAMOS → Perfeito, com garantia e frete grátis
+
+É simples assim. Enquanto a gente cuida do seu celular, você faz o que importa. 😊
+
+Salva esse post e compartilha com quem precisa! 👇
+📲 (62) 98169-2621
+📍 Uruaçu, Goiás
+
+#ComoFunciona #ConsertoDeCelular #LevaETraz #BertzTechDigital #Uruaçu #Praticidade</pre>
+        </div>
+    </div>
+
+    <!-- ─── STORY 6: CTA ─── -->
+    <div class="post-container" id="story-cta" data-format="story" data-card="cta">
+        <span class="post-label">Story 6 — CTA / WhatsApp · 9:16</span>
+        <div class="card card-story card-cta">
+            <div class="wave"></div>
+            <div class="story-cta-wrap">
+                <div>
+                    <div class="story-cta-logo"><img src="/images/logo.jpeg" alt="BertzTech Digital"></div>
+                    <div class="story-cta-nm">BertzTech Digital</div>
+                </div>
+                <h2 class="story-cta-h">Pronto para<br>chamar o<br><span>técnico?</span></h2>
+                <p class="story-cta-s">Diagnóstico gratuito, atendimento no conforto da sua casa e garantia em tudo. Sem burocracia.</p>
+                <div class="story-wa">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    (62) 98169-2621
+                </div>
+                <span class="story-cta-url">📸 <span>@bertztech_digital</span> · Uruaçu, GO</span>
+            </div>
+        </div>
+        <p class="print-hint">Tire um print da área do card · zoom 100% · <kbd>Win + Shift + S</kbd></p>
+        <div class="caption-box">
+            <div class="caption-header">
+                <span class="caption-label"><i class="fa-brands fa-instagram"></i> Legenda sugerida</span>
+                <button class="copy-btn" onclick="copyCaption(this)"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+            <pre class="caption-text">Não deixa o celular quebrado parado! Chama a BertzTech. 🔧📲
+
+Diagnóstico gratuito + atendimento em domicílio + garantia no serviço.
+
+Você merece praticidade. Por isso a gente busca, conserta e devolve — sem você gastar tempo nem combustível.
+
+👉 É fácil, rápido e sem complicação!
+
+📲 (62) 98169-2621 — WhatsApp
+📸 Instagram: @bertztech_digital
+📍 Uruaçu, Goiás
+
+#BertzTechDigital #PrimeiroAtendimento #ConsertoDeCelular #AssistênciaTécnica #Uruaçu #Goiás #TecnologiaEmDomicílio</pre>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let currentFormat = 'feed';
+    let currentCard   = 'brand';
+
+    const params     = new URLSearchParams(window.location.search);
+    const pFormat    = params.get('format');
+    const pCard      = params.get('card');
+    const exportMode = params.get('export') === '1';
+
+    if (pFormat === 'feed' || pFormat === 'story') currentFormat = pFormat;
+    if (pCard) currentCard = pCard;
+    if (exportMode) document.body.classList.add('export-mode');
+
+    const fmtBtns       = document.querySelectorAll('.fmt-btn');
+    const navBtns       = document.querySelectorAll('.nav-btn');
+    const allContainers = document.querySelectorAll('.post-container');
+
+    function showActive() {
+        allContainers.forEach(c => {
+            const match = c.dataset.format === currentFormat && c.dataset.card === currentCard;
+            c.classList.toggle('visible', match);
+        });
+        const visible = document.querySelector('.post-container.visible');
+        if (visible && !exportMode) visible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    showActive();
+    fmtBtns.forEach(b => b.classList.toggle('active', b.dataset.format === currentFormat));
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.card === currentCard));
+
+    fmtBtns.forEach(btn => btn.addEventListener('click', () => {
+        fmtBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFormat = btn.dataset.format;
+        showActive();
+    }));
+
+    navBtns.forEach(btn => btn.addEventListener('click', () => {
+        navBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCard = btn.dataset.card;
+        showActive();
+    }));
+
+    // ─── Download PNG ───
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+        const btn  = document.getElementById('downloadBtn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando...';
+        btn.disabled = true;
+
+        const card = document.querySelector('.post-container.visible .card');
+        if (!card) { btn.innerHTML = '<i class="fa-solid fa-download"></i> Baixar PNG'; btn.disabled = false; return; }
+
+        const isFeed = !card.classList.contains('card-story');
+        const scale  = isFeed ? (1080 / 540) : (1080 / 405);
+
+        try {
+            const canvas = await html2canvas(card, {
+                scale, useCORS: true, allowTaint: false,
+                backgroundColor: null, logging: false, removeContainer: true,
+            });
+            const fileName = `bertztech-${currentCard}-${currentFormat}.png`;
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        } catch (e) {
+            alert('Erro ao gerar PNG. Abra o arquivo diretamente pelo browser.');
+            console.error(e);
+        }
+
+        btn.innerHTML = '<i class="fa-solid fa-download"></i> Baixar PNG';
+        btn.disabled = false;
+    });
+
+    // ─── Copiar legenda ───
+    function copyCaption(btn) {
+        const text = btn.closest('.caption-box').querySelector('.caption-text').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => _setCopied(btn)).catch(() => _fallbackCopy(btn, text));
+        } else {
+            _fallbackCopy(btn, text);
+        }
+    }
+    function _fallbackCopy(btn, text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;top:-999px;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        _setCopied(btn);
+    }
+    function _setCopied(btn) {
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar';
+        }, 2200);
+    }
+</script>
+</body>
+</html>

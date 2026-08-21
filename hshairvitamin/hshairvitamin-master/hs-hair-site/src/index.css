@@ -1,0 +1,40 @@
+:root {
+  --bg-main: #fff9fc;
+  --text: #43172e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 5% 8%, rgba(255, 182, 222, 0.35), transparent 25%),
+    radial-gradient(circle at 85% 24%, rgba(255, 214, 233, 0.4), transparent 35%),
+    var(--bg-main);
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
+}
